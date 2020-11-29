@@ -1,0 +1,13 @@
+https://bezkoder.com/django-postgresql-crud-rest-framework/
+https://bezkoder.com/react-hooks-crud-axios-api/
+
+Django :
+dossier app = une app créée avec django
+models.py = y définir les models
+serializers.py = y définir les serializers
+app/urls.py = urls qu'il faut atteindre pour appeler les fonctions de views.py
+Django/urls.py = y appeler app/urls.py
+app/views.py = views
+migrer modèle apres l'avoir créé = python manage.py makemigrations app
+ajout modèle dans DB apres migration = python manage.py migrate app
+settings.py = parametres dont définition DB
