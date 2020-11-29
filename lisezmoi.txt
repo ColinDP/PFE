@@ -10,4 +10,11 @@ Django/urls.py = y appeler app/urls.py
 app/views.py = views
 migrer modèle apres l'avoir créé = python manage.py makemigrations app
 ajout modèle dans DB apres migration = python manage.py migrate app
+
 settings.py = parametres dont définition DB
+!! DB pour le moment à définir selon votre config 
+!! jusqu'à ce qu'on se connecte à coursinfo.ipl.be (j'y ai pas accès)
+!! faudra refaire les migrations après le changement
+
+Native :
+assets = les images
