@@ -60,6 +60,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8081',
+    'http://localhost:19006',
 )
 
 ROOT_URLCONF = 'Django.urls'
@@ -86,17 +87,36 @@ WSGI_APPLICATION = 'Django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'ok',
+#         'HOST': '127.0.01',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'ok',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': 'dbpierre_wets',
+        'USER': 'pierre_wets',
+        'PASSWORD': 'Dec641=',
+        'HOST': 'coursinfo.ipl.be',
+        'PORT': '5432'
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dcqabpaj',
+#         'USER': 'dcqabpaj',
+#         'PASSWORD': 'lEPP2ZqqqWJyS5DzAovPGawK43IEBMQz',
+#         'HOST': 'hattie.db.elephantsql.com',
+#         'PORT': '5432'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
