@@ -8,6 +8,9 @@ import { Button } from "react-native";
 import AjouterTuto from "./PageTest";
 import RegisterForm from "./RegisterForm";
 
+import LoginForm from "./LoginForm";
+
+
 function Main() {
   return (
     <div>
@@ -17,6 +20,9 @@ function Main() {
           </Route>  
           <Route exact path="/" exact>
             <RegisterForm />
+          </Route>
+          <Route exact path="/login" exact>
+            <LoginForm />
           </Route>  
         </Switch>   
     </div>
