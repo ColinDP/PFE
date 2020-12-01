@@ -5,14 +5,18 @@ import { Switch, Route } from "react-router-dom";
 
 import { Button } from 'react-native';
 
-import PageTest from "./PageTest";
+import AjouterTuto from "./PageTest";
+import RegisterForm from "./RegisterForm";
 
 function Main() {
   return (
     <div>
         <Switch>        
           <Route exact path="/add" exact>
-            <PageTest />
+            <AjouterTuto />
+          </Route>  
+          <Route exact path="/" exact>
+            <RegisterForm />
           </Route>  
         </Switch>   
     </div>
