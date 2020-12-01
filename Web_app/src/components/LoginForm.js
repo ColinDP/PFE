@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Button, TextInput, View, Text } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
+import AuthService from "../services/authService";
 
 const loginSchema = yup.object({
   email: yup.string().required("Email is required"),
@@ -13,8 +14,9 @@ const LoginForm = () => {
     <Formik
       style={styles.container}
       initialValues={{ email: "", password: "" }}
-      onSubmit={(values, actions) => {
-        console.log(values);
+      onSubmit={(data, actions) => {
+        console.log(data);
+        AuthService.authenticate(data);
       }}
       validationSchema={loginSchema}
     >
