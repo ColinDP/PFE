@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DataService from "../services/Service";
-import { Button } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 
 const PageTest = () => {
@@ -36,14 +36,14 @@ const PageTest = () => {
   };
 
   return (
-    <div >
+    <View >
       <Button
         onPress={saveData}
         title="Learn More"
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
       />
-    </div>
+    </View>
   );
 };
 

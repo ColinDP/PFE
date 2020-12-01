@@ -1,13 +1,10 @@
 import React from 'react';
-// import { NativeRouter } from 'react-router-native';
-import { BrowserRouter } from "react-router-dom";
 import Main from './src/components/Main';
+import { PermissionsAndroid} from 'react-native';
 
 const App = () => {
   return (
-    <BrowserRouter>
       <Main />
-    </BrowserRouter>
     );
 };
 
