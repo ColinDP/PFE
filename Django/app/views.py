@@ -3,27 +3,33 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
- 
+from django.contrib.auth.models import User
 from app.models import Establishment
 from app.serializers import LoginSerializer
 from rest_framework.decorators import api_view
-
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from app import parser
 
 @api_view(['POST'])
 def login(request):
- 
     login_data = JSONParser().parse(request)
-    print(login_data['email'])
-    try : 
-        establishment = Establishment.objects.get(mail = )
-    except Establishment.DoesNotExist :
-        establishment = None
-    print('establishment : ', establishment)
-    login_serializer = LoginSerializer(data=login_data)
-    if login_serializer.is_valid():
-        return JsonResponse(login_serializer.data, status=status.HTTP_201_CREATED) 
-    return JsonResponse(login_serializer.errors, status=status.HTTP_401_BAD_REQUEST)
+    username = login_data['email']
+    password = login_data['password']
+    user = authenticate(request._request, username = username, password = password)
+    if user is not None:
+        auth_login(request._request, user)
+        return JsonResponse({'response': 'Welcome'}, status=status.HTTP_201_CREATED) 
+    return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_401_BAD_REQUEST)
  
+@api_view(['POST'])
+def register(request):
+    register_data = JSONParser().parse(request)
+    user = User.objects.create_user(register_data['email'], register_data['email'], register_data['password'])
+    if user is not None: 
+        return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def tutorial_detail(request, pk):
     # find tutorial by pk (id)
@@ -40,7 +46,7 @@ def tutorial_detail(request, pk):
         tutorial_data = JSONParser().parse(request) 
         tutorial_serializer = TutorialSerializer(tutorial, data=tutorial_data) 
         if tutorial_serializer.is_valid(): 
-            tutorial_serializer.save() 
+            tutorial_serializer.save()
             return JsonResponse(tutorial_serializer.data) 
         return JsonResponse(tutorial_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # Delete an object
