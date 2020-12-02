@@ -12,6 +12,10 @@ const create = data => {
   return http.post("/tutorials", data);
 };
 
+const askForQR = data => {
+  return http.post("/get_code", data);
+};
+
 const update = (id, data) => {
   return http.put(`/tutorials/${id}`, data);
 };
@@ -32,6 +36,7 @@ export default {
   getAll,
   get,
   create,
+  askForQR,
   update,
   remove,
   removeAll,
