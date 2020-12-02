@@ -4,33 +4,25 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
  
-from app.models import Tutorial
-from app.serializers import TutorialSerializer
+from app.models import Establishment
+from app.serializers import LoginSerializer
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET', 'POST', 'DELETE'])
-def tutorial_list(request):
-    # Retrieve objects
-    if request.method == 'GET':
-        tutorials = Tutorial.objects.all()
-        
-        title = request.GET.get('title', None)
-        if title is not None:
-            tutorials = tutorials.filter(title__icontains=title)
-        
-        tutorials_serializer = TutorialSerializer(tutorials, many=True)
-        return JsonResponse(tutorials_serializer.data, safe=False)
-        # 'safe=False' for objects serialization
-    # Create a new object
-    elif request.method == 'POST':
-        tutorial_data = JSONParser().parse(request)
-        
-        tutorial_serializer = TutorialSerializer(data=tutorial_data)
-        if tutorial_serializer.is_valid():
-            tutorial_serializer.save()
-            return JsonResponse(tutorial_serializer.data, status=status.HTTP_201_CREATED) 
-        return JsonResponse(tutorial_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def login(request):
+ 
+    login_data = JSONParser().parse(request)
+    print(login_data['email'])
+    try : 
+        establishment = Establishment.objects.get(mail = )
+    except Establishment.DoesNotExist :
+        establishment = None
+    print('establishment : ', establishment)
+    login_serializer = LoginSerializer(data=login_data)
+    if login_serializer.is_valid():
+        return JsonResponse(login_serializer.data, status=status.HTTP_201_CREATED) 
+    return JsonResponse(login_serializer.errors, status=status.HTTP_401_BAD_REQUEST)
  
 @api_view(['GET', 'PUT', 'DELETE'])
 def tutorial_detail(request, pk):
