@@ -10,6 +10,12 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from app import parser
+import pyqrcode
+from pyzbar.pyzbar import decode
+from PIL import Image
+import base64
+
+
 
 @api_view(['POST'])
 def login(request):
@@ -20,8 +26,8 @@ def login(request):
     if user is not None:
         auth_login(request._request, user)
         return JsonResponse({'response': 'Welcome'}, status=status.HTTP_201_CREATED) 
-    return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_401_BAD_REQUEST)
- 
+    return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['POST'])
 def register(request):
     register_data = JSONParser().parse(request)
@@ -29,6 +35,21 @@ def register(request):
     if user is not None: 
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
     return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
+
+@api_view(['POST'])
+def get_qr_code(request):
+    #get_qr_code_data = JSONParser().parse(request)
+    #number_qr_codes = get_qr_code_data['number']
+    qr = pyqrcode.create(1)
+    qr.png("test1.png", scale = 2)
+    data = decode(Image.open('test1.png'))
+    print(data)
+    encoded_string =' '
+    with open("test1.png", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+    print(encoded_string)
+    return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    #return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def tutorial_detail(request, pk):
