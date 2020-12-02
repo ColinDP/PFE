@@ -8,23 +8,22 @@ import { Button } from "react-native";
 import AjouterTuto from "./PageTest";
 import RegisterForm from "./RegisterForm";
 
-import LoginForm from "./LoginForm";
-
+import LoginForm from "./LoginForm/LoginForm";
 
 function Main() {
   return (
     <div>
-        <Switch>        
-          <Route exact path="/add" exact>
-            <AjouterTuto />
-          </Route>  
-          <Route exact path="/" exact>
-            <RegisterForm />
-          </Route>
-          <Route exact path="/login" exact>
-            <LoginForm />
-          </Route>  
-        </Switch>   
+      <Switch>
+        <Route exact path="/add" exact>
+          <AjouterTuto />
+        </Route>
+        <Route exact path="/" exact>
+          <RegisterForm />
+        </Route>
+        <Route exact path="/login" exact>
+          <LoginForm />
+        </Route>
+      </Switch>
     </div>
   );
 }
