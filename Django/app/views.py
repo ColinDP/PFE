@@ -43,12 +43,10 @@ def get_qr_code(request):
     qr = pyqrcode.create(1)
     qr.png("test1.png", scale = 2)
     data = decode(Image.open('test1.png'))
-    print(data)
-    encoded_string =' '
+    encoded_string =''
     with open("test1.png", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
-    print(encoded_string)
-    return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    return JsonResponse({'image': str(encoded_string)}, status=status.HTTP_201_CREATED)
     #return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
