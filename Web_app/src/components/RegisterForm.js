@@ -1,66 +1,56 @@
-import React, {useState} from 'react';
-import DataService from "../services/Service";
-import { Text, View, TextInput,Button} from 'react-native';
+import React from "react";
+import { StyleSheet, Button, View } from "react-native";
+import { Formik, Field } from "formik";
+import * as yup from "yup";
+import AuthService from "../services/authService";
+import CustomInput from "./CustomInput";
+
+const registerSchema = yup.object({
+  email: yup.string().required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 
 const RegisterForm = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const initialTutorialState = {
-        id: null,
-        title: "",
-        description: "",
-        published: false
-      };
-      const [data, setData] = useState(initialTutorialState);
-      const [submitted, setSubmitted] = useState(false);
-
-      const saveData = () => {
-        var data2 = {
-          title: name,
-          description: email
-        };
-
-        DataService.create(data2)
-          .then(response => {
-            setData({
-              id: response.data.id,
-              title: response.data.title,
-              description: response.data.description,
-              published: response.data.published
-            });
-            setSubmitted(true);
-            console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      };
-
   return (
-    <View>
-      <Text> Login Form </Text>
-      <View>
-        <TextInput 
-         placeholder="Enter Email" 
-         onChangeText={(text) => {setEmail(text)}}
-        />
-        <TextInput
-          placeholder="Enter Name"
-          onChangeText={(text) => {setName(text)}}
-        />
-        <TextInput
-          secureTextEntry={true}
-          placeholder="Enter Password"
-        />
-      </View>
-      <Button
-            onPress={saveData}
-            title="Register"
-            color="green"
-            accessibilityLabel="Learn more about this purple button"
-        />
-    </View>
+    <Formik
+      style={styles.container}
+      initialValues={{ email: "", password: "" }}
+      onSubmit={(data, actions) => {
+        console.log(data);
+        AuthService.createUser(data).then((resp) => console.log(resp));
+      }}
+      validationSchema={registerSchema}
+    >
+      {({ handleSubmit, isValid }) => (
+        <View style={styles.registerContainer}>
+          <Field component={CustomInput} name="email" placeholder="Email" />
+          <Field
+            component={CustomInput}
+            type="password"
+            name="password"
+            placeholder="Password"
+            secureTextEntry
+          />
+          <Button onPress={handleSubmit} title="Register" disabled={!isValid} />
+        </View>
+      )}
+    </Formik>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  registerContainer: {
+    width: "30%",
+    alignItems: "center",
+    backgroundColor: "white",
+    padding: 10,
+    elevation: 10,
+    backgroundColor: "#e6e6e6",
+  },
+});
 
 export default RegisterForm;

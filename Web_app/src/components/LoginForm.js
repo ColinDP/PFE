@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Button, View } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
-import AuthService from "../../services/authService";
+import AuthService from "../services/authService";
 import CustomInput from "./CustomInput";
 
 const loginSchema = yup.object({
@@ -17,7 +17,7 @@ const LoginForm = () => {
       initialValues={{ email: "", password: "" }}
       onSubmit={(data, actions) => {
         console.log(data);
-        AuthService.authenticate(data);
+        AuthService.authenticateUser(data).then((resp) => console.log(resp));
       }}
       validationSchema={loginSchema}
     >
