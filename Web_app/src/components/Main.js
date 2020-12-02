@@ -8,7 +8,7 @@ import { Button } from "react-native";
 import AjouterTuto from "./PageTest";
 import RegisterForm from "./RegisterForm";
 
-import LoginForm from "./LoginForm/LoginForm";
+import LoginForm from "./LoginForm";
 
 function Main() {
   return (
@@ -17,7 +17,7 @@ function Main() {
         <Route exact path="/add" exact>
           <AjouterTuto />
         </Route>
-        <Route exact path="/" exact>
+        <Route exact path="/register" exact>
           <RegisterForm />
         </Route>
         <Route exact path="/login" exact>
