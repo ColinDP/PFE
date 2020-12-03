@@ -25,9 +25,6 @@ SECRET_KEY = 'qjz&v@6+b4a2+2g&c-0^g==_34cep@8x)slqz2#*b9!%5loiy&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -63,6 +60,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:19006',
     'http://localhost:19002',
 )
+
+ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'Django.urls'
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DataService from "../services/Service";
-import { View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button} from 'react-native';
 
 
 const PageTest = () => {
@@ -15,8 +15,8 @@ const PageTest = () => {
 
   const saveData = () => {
     var data = {
-      title: "coucou",
-      description: "help"
+      email: "demo@hotmail.com",
+      password: "1234"
     };
 
     DataService.create(data)
@@ -35,16 +35,29 @@ const PageTest = () => {
       });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      flexDirection:"column",
+      justifyContent:"center"
+    },
+    button: {
+      flex: 1
+    },
+  });
+
   return (
-    <View >
+    <View style={styles.container}>
       <Button
+        style={styles.button}
         onPress={saveData}
-        title="Learn More"
+        title="envoi"
         color="#841584"
-        accessibilityLabel="Learn more about this purple button"
       />
     </View>
   );
-};
+
+}
 
 export default PageTest;

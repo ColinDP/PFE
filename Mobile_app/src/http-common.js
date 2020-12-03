@@ -1,8 +1,16 @@
 import axios from "axios";
+import Constants from "expo-constants";
+
+const { manifest } = Constants;
+const uri = `http://${manifest.debuggerHost.split(':').shift()}:8080/api`;
+
+
+console.log("url : " + uri)
 
 export default axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: uri,
   headers: {
-    "Content-type": "application/json"
+    "Content-type": "application/x-www-form-urlencoded",
+    Accept :"application/json"
   }
 });
