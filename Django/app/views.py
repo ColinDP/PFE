@@ -18,6 +18,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
+import uuid
+
 
 
 @api_view(['POST'])
@@ -114,3 +116,11 @@ def tutorial_list_published(request):
     if request.method == 'GET': 
         tutorials_serializer = TutorialSerializer(tutorials, many=True)
         return JsonResponse(tutorials_serializer.data, safe=False)
+
+
+#Marc
+#Generate an unique id for the devices
+@api_view(['GET'])
+def get_device_id(request):
+    id = uuid.uuid4()
+    return JsonResponse({'device_id' : id})

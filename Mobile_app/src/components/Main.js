@@ -1,10 +1,16 @@
 import React from "react";
 import PageTest from "./PageTest";
-import { PermissionsAndroid} from 'react-native';
+import Scan from "./Scan";
+import TestRequest from "./TestRequest";
+
 
 function Main() {
+  console.log("Main.js");
   return (
-    <PageTest />
+    <>
+        <Scan/>
+        <TestRequest/>
+    </>
   );
 }
 export default Main;
