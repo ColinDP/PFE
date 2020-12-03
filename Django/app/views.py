@@ -1,45 +1,59 @@
 from django.shortcuts import render
-
+from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.contrib.auth.models import User
+
 from app.models import Establishment
 from app.serializers import LoginSerializer
 from rest_framework.decorators import api_view
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
 from app import parser
 import pyqrcode
 from pyzbar.pyzbar import decode
 from PIL import Image
 import base64
+from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 
 
 @api_view(['POST'])
-def login(request):
+def login_request(request):
+    print(request.user.is_authenticated)
+    request.user
     login_data = JSONParser().parse(request)
     username = login_data['email']
     password = login_data['password']
-    user = authenticate(request._request, username = username, password = password)
+    user = authenticate(request, username = username, password = password)
     if user is not None:
-        auth_login(request._request, user)
-        return JsonResponse({'response': 'Welcome'}, status=status.HTTP_201_CREATED) 
+        login(request, user)
+        return JsonResponse({'response': 'User Connected', 'token' : request.session.session_key}, status=status.HTTP_201_CREATED)
     return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_400_BAD_REQUEST)
 
+@login_required
 @api_view(['POST'])
 def register(request):
+
     register_data = JSONParser().parse(request)
     user = User.objects.create_user(register_data['email'], register_data['email'], register_data['password'])
     if user is not None: 
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
-    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
+    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def get_qr_code(request):
-    #get_qr_code_data = JSONParser().parse(request)
+    print(User.objects.get(pk=4).is_authenticated)
+
+    get_qr_code_data = JSONParser().parse(request)
+    token = get_qr_code_data['token']
     #number_qr_codes = get_qr_code_data['number']
+    #if request._request.user.is_authenticated is not True:
+        #return JsonResponse({'response': 'Not connected'}, status=status.HTTP_400_BAD_REQUEST)
+    #if not request.user.is_authenticated:
+    #    return JsonResponse({'response': 'Not connected'}, status=status.HTTP_400_BAD_REQUEST)
     qr = pyqrcode.create(1)
     qr.png("test1.png", scale = 2)
     data = decode(Image.open('test1.png'))
@@ -48,6 +62,20 @@ def get_qr_code(request):
         encoded_string = base64.b64encode(image_file.read())
     return JsonResponse({'image': str(encoded_string)}, status=status.HTTP_201_CREATED)
     #return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
+
+@api_view(['POST'])
+def logout_request(request):
+    User.objects.get(pk=4).is_authenticated = False
+    print(User.objects.get(pk=4).is_authenticated)
+
+    # get_logout_data = JSONParser().parse(request)
+    # token = get_qr_code_data['token']
+    # auth.logout(request)
+    # django_session = Session.objects.get(pk = token)
+    # print(django_session)
+    # print('token')
+    
+    return JsonResponse({'image': 'User logged out'}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def tutorial_detail(request, pk):
