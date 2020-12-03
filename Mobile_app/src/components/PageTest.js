@@ -15,8 +15,10 @@ const PageTest = () => {
 
   const saveData = () => {
     var data = {
-      title: "coucou",
-      description: "help"
+      // title: "coucou",
+      // description: "help"
+      email: "demo@hotmail.com",
+      password: "1234"
     };
 
     DataService.create(data)

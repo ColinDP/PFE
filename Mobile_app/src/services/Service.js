@@ -8,8 +8,11 @@ const get = id => {
   return http.get(`/tutorials/${id}`);
 };
 
+// const create = data => {
+//   return http.post("/tutorials", data);
+// };
 const create = data => {
-  return http.post("/tutorials", data);
+  return http.post("/login", data);
 };
 
 const update = (id, data) => {

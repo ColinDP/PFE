@@ -60,9 +60,8 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8081',
-    'http://localhost:19006',
-    'http://localhost:19002',
 )
+ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'Django.urls'
 
