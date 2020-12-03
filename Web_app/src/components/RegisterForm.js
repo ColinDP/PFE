@@ -2,8 +2,8 @@ import React from "react";
 import { StyleSheet, Button, View } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
-import AuthService from "../services/authService";
-import CustomInput from "./CustomInput";
+import AuthService from "services/authService";
+import CustomInput from "components/CustomInput";
 
 const registerSchema = yup.object({
   email: yup.string().required("Email is required"),

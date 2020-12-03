@@ -1,33 +1,35 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import App from "components/App";
+import "css/style.css";
 
-// import { Route, Switch, Link } from 'react-router-native';
+/* const fontConfig = {
+  default:{
+    regular:{
 
-import { Button } from "react-native";
+    }
+  }
+} */
 
-import AjouterTuto from "./PageTest";
-import RegisterForm from "./RegisterForm";
-import LoginForm from "./LoginForm";
-import Home from "./Home";
+const theme = {
+  ...DefaultTheme,
+  //roundness: 15,
+  colors: {
+    ...DefaultTheme.colors,
+    //primary: "#03dac6",
+    accent: "#f1c40f",
+    error: "#ff0f0f",
+  },
+  fonts: {
+    fontWeight: "light",
+  },
+};
 
 function Main() {
   return (
-    <div>
-      <Switch>
-        <Route exact path="/add" exact>
-          <AjouterTuto />
-        </Route>
-        <Route exact path="/register" exact>
-          <RegisterForm />
-        </Route>
-        <Route exact path="/login" exact>
-          <LoginForm />
-        </Route>
-        <Route exact path="/" exact>
-          <Home />
-        </Route>
-      </Switch>
-    </div>
+    <PaperProvider theme={theme}>
+      <App />
+    </PaperProvider>
   );
 }
 

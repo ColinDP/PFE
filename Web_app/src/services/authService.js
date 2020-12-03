@@ -1,7 +1,11 @@
-import http from "../http-common";
+import http from "http-common";
 
-const createUser = (data) => {
-  return http.post("/register", data).then((resp) => resp.data);
+const createDoctor = (data) => {
+  return http.post("/registerDoctor", data).then((resp) => resp.data);
+};
+
+const createEstablishment = (data) => {
+  return http.post("/registerEstablishment", data).then((resp) => resp.data);
 };
 
 const authenticateUser = (data) => {
@@ -10,5 +14,6 @@ const authenticateUser = (data) => {
 
 export default {
   authenticateUser,
-  createUser,
+  createDoctor,
+  createEstablishment,
 };
