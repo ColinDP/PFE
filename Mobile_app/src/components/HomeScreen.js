@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom"
 import { StyleSheet, View, Text, Button } from "react-native";
 import PageTest from "./PageTest";
+import Authenticate from "./Authenticate";
   
 const HomeScreen = () => {
   
@@ -50,7 +51,7 @@ const HomeScreen = () => {
                 <Text style={styles.title1}>Bienvenue</Text>
             </View>
             <View style={styles.infoContainer}>
-                <PageTest />
+                <Authenticate />
             </View>
             <View style={styles.buttonContainer}>
                 <Button
