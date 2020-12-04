@@ -48,7 +48,7 @@ def login_request(request):
                 return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'E'}, status=status.HTTP_200_OK)
             doctor = Doctor.objects.get(pk=user.id)
             if doctor is not None : 
-                return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'E'}, status=status.HTTP_200_OK)
+                return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'D'}, status=status.HTTP_200_OK)
     return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -92,6 +92,7 @@ def register_doctor(request):
                 'inami' : request_data['num_inami'],
                 'mail' : request_data['email']
             }
+    
     doctor_serializer = DoctorSerializer(data = doctor)
     print(doctor_serializer)
     if doctor_serializer.is_valid():
@@ -118,7 +119,11 @@ def get_qr_code(request):
     qr_codes_list = []
     while i < int(n_qr_codes):
         # besoin de générer un fichier pour les médecins et les établissement où se trouve l'id suivant
-        qr = pyqrcode.create(1)
+        #générer id aléatoire
+        id
+        id = uuid.uuid4()
+        #enregistrer cet id dans DB
+        qr = pyqrcode.create(id)
         qr.png("testQR.svg",scale=5)
         data = decode(Image.open("testQR.svg"))
         encoded_string =''
