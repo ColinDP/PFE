@@ -15,24 +15,25 @@ import {
   Redirect,
   useRouteMatch,
   useHistory,
-} from "react-router-dom"
+} from "react-router-dom";
 const loginSchema = yup.object({
   email: yup.string(),
   password: yup.string(),
 });
 
 const LoginForm = ({ setShowRegisterForm }) => {
-  const history = useHistory()
+  const history = useHistory();
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       onSubmit={(data, actions) => {
         console.log(data);
+        // CALL API TO LOGIN USER
         AuthService.authenticateUser(data).then((resp) => {
-          console.log(resp)
-          localStorage.setItem('token', resp.token)
-          history.push('/home')
-          console.log(localStorage.getItem('token'))
+          console.log(resp);
+          localStorage.setItem("token", resp.token);
+          history.push("/home");
+          console.log(localStorage.getItem("token"));
         });
       }}
       validationSchema={loginSchema}
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
+    marginBottom: "25px",
   },
   buttons: {
     justifyContent: "space-between",
