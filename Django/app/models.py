@@ -29,3 +29,7 @@ class Doctor(models.Model):
 class User(models.Model):
     mail = models.CharField(max_length=300, blank=False, default='')
     hashedPassword = models.CharField(max_length=300, blank=False, default='')
+
+class Connection(models.Model):
+    user_id = models.IntegerField()
+    expire_date = models.DateTimeField(auto_now=False, auto_now_add=True)

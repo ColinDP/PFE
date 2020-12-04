@@ -7,19 +7,33 @@ import CustomInput from "components/AuthForm/CustomInput";
 import { Button, Card, Title } from "react-native-paper";
 import mailIcon from "assets/svg/mail.svg";
 import passwordIcon from "assets/svg/lock.svg";
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useRouteMatch,
+  useHistory,
+} from "react-router-dom"
 const loginSchema = yup.object({
   email: yup.string(),
   password: yup.string(),
 });
 
 const LoginForm = ({ setShowRegisterForm }) => {
+  const history = useHistory()
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       onSubmit={(data, actions) => {
         console.log(data);
-        AuthService.authenticateUser(data).then((resp) => console.log(resp));
+        AuthService.authenticateUser(data).then((resp) => {
+          console.log(resp)
+          localStorage.setItem('token', resp.token)
+          history.push('/')
+          console.log(localStorage.getItem('token'))
+        });
       }}
       validationSchema={loginSchema}
       validateOnChange={true}
