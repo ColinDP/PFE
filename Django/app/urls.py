@@ -8,7 +8,8 @@ urlpatterns = [
     url(r'^api/login$', views.login_request),
     url(r'^api/register$', views.register),
     url(r'^api/get_code$', views.get_qr_code),
-    url(r'^api/logout$', views.logout_request)
+    url(r'^api/logout$', views.logout_request),
+    url(r'^api/get_device_id$', views.get_device_id)
 
 
 ]

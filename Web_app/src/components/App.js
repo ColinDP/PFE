@@ -5,6 +5,7 @@ import { StyleSheet, View } from "react-native";
 import RegisterForm from "components/AuthForm/RegisterForm";
 import LoginForm from "components/AuthForm/LoginForm";
 import Home from "components/Home";
+import GeneratePDF from "./GeneratePDF";
 
 const App = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);

@@ -1,10 +1,10 @@
 from rest_framework import serializers 
-from app.models import Establishment
+from app.models import Connection
  
  
-class LoginSerializer(serializers.ModelSerializer):
+class ConnectionSerializer(serializers.ModelSerializer):
  
     class Meta:
-        model = Establishment
-        fields = ('mail',
-                  'password')
+        model = Connection
+        fields = ('user_id',
+                  'expire_date')
