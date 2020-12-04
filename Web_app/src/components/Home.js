@@ -22,6 +22,7 @@ const Home = () => {
 
   return (
     <div>
+      <Logout />
       <Formik
         style={styles.container}
         initialValues={{ quantity: 1 }}
