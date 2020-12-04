@@ -17,7 +17,6 @@ const loginSchema = yup.object({
 const Home = () => {
 
   const [QRImage,setQRImage] = useState(<div></div>)
-  const [QRButton,setQRButton] = useState(<div></div>)
   const [PDF,setPDF] = useState(<div></div>)
 
 
@@ -36,10 +35,10 @@ const Home = () => {
         setQRImage(<p>waiting...</p>);
         Service.askForQR(data).then((resp) =>{
           const imageStringBase64 = resp.data.image.substring(2,resp.data.image.length -1);
-          setPDF(<p></p>);
-          setQRButton(<Button onPress={handleSubmitPDF(`data:image/png;base64,${imageStringBase64}`,data.quantity)} title="Generate PDF" color="#FFD700"/>)
-          setQRImage(<Image style={{ flex: 0.2,width:500, height:500,borderRadius: 20}} source={{uri: `data:image/jpeg;base64,${imageStringBase64}`}}/>);      
           
+          
+          setQRImage(<Image style={{ flex: 0.2,width:500, height:500,borderRadius: 20}} source={{uri: `data:image/jpeg;base64,${imageStringBase64}`}}/>);      
+          setPDF(<GeneratePDF quantity={data.quantity} image={`data:image/png;base64,${imageStringBase64}`}/>);
         }) 
       }}
       validationSchema={loginSchema}
@@ -59,15 +58,12 @@ const Home = () => {
             accessibilityLabel="Generate A Usable QRCode"
             disabled= {!isValid}  
         />
-        {QRButton}
         </View>
       )}
     </Formik>    
     <div>{QRImage}</div>
     
     <View  >{PDF}</View>
-   
-    
     </div>
   );
 };

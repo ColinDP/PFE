@@ -23,9 +23,6 @@ const App = () => {
       <Route exact path="/Home" exact>
         <Home />
       </Route>
-      <Route exact path="/PDF" exact>   
-        <GeneratePDF quantity={1}/>
-      </Route>
     </Switch>
   );
 };

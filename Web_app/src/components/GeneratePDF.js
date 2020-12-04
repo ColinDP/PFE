@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Document, Page,Image, Text, View, StyleSheet } from "@react-pdf/renderer";
 import ReactDOM from 'react-dom';
 import test from '../assets/icon.png'
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer,PDFDownloadLink } from '@react-pdf/renderer';
 
 
 const GeneratePDF =  ({quantity,image}) => {
@@ -34,11 +34,14 @@ const GeneratePDF =  ({quantity,image}) => {
         setSubmitted(true)
     }
 
-
+    const MyDoc = () => <Document >{MyPages.map(page => page)}</Document>
 
     
     return(
-        <PDFViewer><Document >{MyPages.map(page => page)}</Document></PDFViewer>
+        <PDFDownloadLink document={<MyDoc />} fileName="SaveLives.pdf">
+            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+        </PDFDownloadLink>
+        
     );
    
 };
