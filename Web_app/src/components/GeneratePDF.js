@@ -5,7 +5,7 @@ import test from '../assets/icon.png'
 import { PDFViewer,PDFDownloadLink } from '@react-pdf/renderer';
 
 
-const GeneratePDF =  ({quantity,image}) => {
+const GeneratePDF =  ({quantity,images}) => {
  
     const [submitted,setSubmitted] = useState(false)
     
@@ -15,15 +15,14 @@ const GeneratePDF =  ({quantity,image}) => {
     const [MyPages,setMyPages] = useState([])
 
     if(!submitted){
-        var testPages = [];
-        
+        var testPages = [];  
         for(var i=0;i<quantity;i++){
             CurrentPageString=`Page ${CurrentPage}/${quantity}`
             testPages.push(
                 <Page key={i} size="A4" style={styles.page}>
                     <View style={styles.section}>
                         <Text>Scan me to save lives!!</Text>
-                        <Image style={styles.image} source={image} />
+                        <Image style={styles.image} source={images[i]} />
                         <Text>{CurrentPageString}</Text>
                     </View> 
                 </Page>);
