@@ -20,7 +20,7 @@ const App = () => {
           )}
         </View>
       </Route>
-      <Route exact path="/Home" exact>
+      <Route exact path="/home" exact>
         <Home />
       </Route>
     </Switch>

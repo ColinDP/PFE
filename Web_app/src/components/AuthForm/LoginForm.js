@@ -31,7 +31,7 @@ const LoginForm = ({ setShowRegisterForm }) => {
         AuthService.authenticateUser(data).then((resp) => {
           console.log(resp)
           localStorage.setItem('token', resp.token)
-          history.push('/')
+          history.push('/home')
           console.log(localStorage.getItem('token'))
         });
       }}

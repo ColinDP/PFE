@@ -6,7 +6,7 @@ class Tutorial(models.Model):
     published = models.BooleanField(default=False)
 
 class Qrcode_Establishment(models.Model):
-    qrcode_id = models.IntegerField()
+    qrcode_id = models.IntegerField(primary_key = True)
     establishment_id = models.IntegerField()
 
 class Qrcode_Doctor(models.Model):
@@ -19,15 +19,25 @@ class Entries_Qrcodes_Client(models.Model):
     date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 class Establishment(models.Model):
-    mail = models.CharField(max_length=300, blank=False, default='')
+    firstname = models.CharField(max_length=50, blank=False, default='')
+    lastname = models.CharField(max_length=50, blank=False, default='')
+    telephone = models.CharField(max_length=13, blank=False, default='')
+    street_name = models.CharField(max_length=100, blank=False, default='')
+    house_number = models.IntegerField()
+    postcode = models.CharField(max_length=10, blank=False, default='') 
+    tva = models.CharField(max_length=20, blank=False, default='')
+    mail = models.CharField(max_length=100, blank=False, default='')
     hashedPassword = models.CharField(max_length=300, blank=False, default='')
 
 class Doctor(models.Model):
-    mail = models.CharField(max_length=300, blank=False, default='')
-    hashedPassword = models.CharField(max_length=300, blank=False, default='')
-
-class User(models.Model):
-    mail = models.CharField(max_length=300, blank=False, default='')
+    firstname = models.CharField(max_length=50, blank=False, default='')
+    lastname = models.CharField(max_length=50, blank=False, default='')
+    telephone = models.CharField(max_length=13, blank=False, default='')
+    street_name = models.CharField(max_length=100, blank=False, default='')
+    house_number = models.IntegerField()
+    postcode = models.CharField(max_length=10, blank=False, default='') 
+    inami = models.CharField(max_length=20, blank=False, default='')
+    mail = models.CharField(max_length=100, blank=False, default='')
     hashedPassword = models.CharField(max_length=300, blank=False, default='')
 
 class Connection(models.Model):
