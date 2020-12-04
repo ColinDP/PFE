@@ -1,5 +1,5 @@
 from django.conf.urls import url 
-from app import views 
+from app import views, views2
  
 urlpatterns = [ 
     # url(r'^api/tutorials$', views.tutorial_list),
@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^api/register_establishment$', views.register_establishment),
     url(r'^api/get_code$', views.get_qr_code),
     url(r'^api/logout$', views.logout_request),
-    url(r'^api/get_device_id$', views.get_device_id)
-
+    url(r'^api/get_device_id$', views.get_device_id),
+    url(r'^api/sendMobileScan$', views2.handleScanned_request)
 
 ]
