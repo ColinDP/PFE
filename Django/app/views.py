@@ -80,8 +80,8 @@ def get_qr_code(request):
 
 @api_view(['POST'])
 def logout_request(request):
-    User.objects.get(pk=4).is_authenticated = False
-    print(User.objects.get(pk=4).is_authenticated)
+    User.objects.get(pk=1).is_authenticated = False
+    print(User.objects.get(pk=1).is_authenticated)
     logout(request)
     
     return JsonResponse({'image': 'User logged out'}, status=status.HTTP_201_CREATED)
