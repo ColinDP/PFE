@@ -8,6 +8,13 @@ const get = id => {
   return http.get(`/tutorials/${id}`);
 };
 
+/**
+ * Get device id from API
+ */
+const getDeviceId = () => {
+  return http.get(`/get_device_id`);
+};
+
 // const create = data => {
 //   return http.post("/tutorials", data);
 // };
@@ -34,6 +41,7 @@ const findByTitle = title => {
 export default {
   getAll,
   get,
+  getDeviceId,
   create,
   update,
   remove,

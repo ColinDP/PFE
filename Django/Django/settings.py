@@ -60,7 +60,6 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:19006',
 
 )
-ALLOWED_HOSTS = ['*']
 
 
 ROOT_URLCONF = 'Django.urls'
