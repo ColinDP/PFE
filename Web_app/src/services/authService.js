@@ -12,9 +12,8 @@ const authenticateUser = (data) => {
   return http.post("/login", data).then((resp) => resp.data);
 };
 
-const logout = () => {
-  const token = localStorage.getItem("token");
-  return http.post("/logout", token).then((resp) => resp.data);
+const logout = (data) => {
+  return http.post("/logout", data).then((resp) => resp.data);
 };
 
 export default {

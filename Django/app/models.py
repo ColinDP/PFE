@@ -48,5 +48,8 @@ class Doctor(models.Model):
     mail = models.CharField(max_length=100, blank=False, default='')
 
 class Connection(models.Model):
-    user_id = models.IntegerField(primary_key=True)
+    user_id = models.IntegerField()
     expire_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+
+class Phones(models.Model):
+    phone_id = models.CharField(max_length=50, blank=False, primary_key = True)

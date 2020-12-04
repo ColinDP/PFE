@@ -13,7 +13,7 @@ class ConnectionSerializer(serializers.ModelSerializer):
         fields = ('user_id',
                   'expire_date')
 
-class EstablishementSerializer(serializers.ModelSerializer):
+class EstablishmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Establishment
         fields = ('user_id',
