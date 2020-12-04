@@ -22,30 +22,30 @@ const Home = () => {
 
   return (
     <div>
-      <Logout />
       <Formik
         style={styles.container}
         initialValues={{ quantity: 1 }}
         onSubmit={(data, actions) => {
           setQRImage(<p>waiting...</p>);
           Service.askForQR(data).then((resp) => {
-            const imageStringBase64 = resp.data.image.substring(
-              2,
-              resp.data.image.length - 1
-            );
-
+            console.log(resp.data.images);
+            console.log(token);
+            //const imageStringBase64 = resp.data.images.substring(2,resp.data.images.length -1);
+            const image = resp.data.images;
+            var images = [];
+            for (var i = 0; i < image.length; i++) {
+              images.push(
+                "data:image/png;base64," +
+                  image[i].substring(2, image[i].length - 1)
+              );
+            }
             setQRImage(
               <Image
                 style={{ flex: 0.2, width: 500, height: 500, borderRadius: 20 }}
-                source={{ uri: `data:image/jpeg;base64,${imageStringBase64}` }}
+                source={{ uri: images[0] }}
               />
             );
-            setPDF(
-              <GeneratePDF
-                quantity={data.quantity}
-                image={`data:image/png;base64,${imageStringBase64}`}
-              />
-            );
+            setPDF(<GeneratePDF quantity={data.quantity} images={images} />);
           });
         }}
         validationSchema={loginSchema}

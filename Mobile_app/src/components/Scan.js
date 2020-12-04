@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import DataService from "../services/Services";
 
 export default function Scan() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -18,6 +19,23 @@ export default function Scan() {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
+  const sendMobileScan = ({ data }) => {
+    setScanned(true);
+    var fields = {
+      QRCodeContent: data,
+      phoneID: "1234",
+    };
+    DataService.sendMobileScan(fields)
+      .then(response => {
+        console.log(response.message);
+        alert(`Response : ${response.message}`);
+      })
+      .catch(e => {
+        console.log(e);
+        alert(`Error : ${e}`);
+      });
+  }
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -33,7 +51,7 @@ export default function Scan() {
         justifyContent: 'flex-end',
       }}>
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        onBarCodeScanned={scanned ? undefined : sendMobileScan}
         style={StyleSheet.absoluteFillObject}
       />
 
