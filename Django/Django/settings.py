@@ -58,8 +58,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8081',
     'http://localhost:19006',
-
 )
+ALLOWED_HOSTS = ['*']
+
 
 
 ROOT_URLCONF = 'Django.urls'
@@ -155,7 +156,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ENCRYPT_KEY = b'iDJpljxUBBsacCZ50GpSBff6Xem0R-giqXXnBFGJ2Rs='
+LOGIN_REDIRECT_URL = '/'
+
 SESSION_SAVE_EVERY_REQUEST=True
 
 

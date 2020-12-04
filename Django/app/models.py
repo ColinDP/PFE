@@ -7,11 +7,18 @@ class Tutorial(models.Model):
 
 class Qrcode_Establishment(models.Model):
     qrcode_id = models.IntegerField(primary_key = True)
-    establishment_id = models.IntegerField()
+    establishment = models.ForeignKey(
+        'Establishment',
+        on_delete=models.CASCADE,
+    )
 
 class Qrcode_Doctor(models.Model):
-    qrcode_id = models.IntegerField()
-    doctor_id = models.IntegerField()
+    qrcode_id = models.IntegerField(primary_key = True)
+    doctor = models.ForeignKey(
+        'Doctor',
+        on_delete=models.CASCADE,
+    )
+    used = models.BooleanField()
 
 class Entries_Qrcodes_Client(models.Model):
     qrcode_id = models.IntegerField()
@@ -19,6 +26,7 @@ class Entries_Qrcodes_Client(models.Model):
     date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 class Establishment(models.Model):
+    user_id = models.IntegerField(primary_key= True)
     firstname = models.CharField(max_length=50, blank=False, default='')
     lastname = models.CharField(max_length=50, blank=False, default='')
     telephone = models.CharField(max_length=13, blank=False, default='')
@@ -27,9 +35,9 @@ class Establishment(models.Model):
     postcode = models.CharField(max_length=10, blank=False, default='') 
     tva = models.CharField(max_length=20, blank=False, default='')
     mail = models.CharField(max_length=100, blank=False, default='')
-    hashedPassword = models.CharField(max_length=300, blank=False, default='')
 
-class Doctor(models.Model):
+class Doctor(models.Model):  
+    user_id = models.IntegerField(primary_key= True)
     firstname = models.CharField(max_length=50, blank=False, default='')
     lastname = models.CharField(max_length=50, blank=False, default='')
     telephone = models.CharField(max_length=13, blank=False, default='')
@@ -38,8 +46,7 @@ class Doctor(models.Model):
     postcode = models.CharField(max_length=10, blank=False, default='') 
     inami = models.CharField(max_length=20, blank=False, default='')
     mail = models.CharField(max_length=100, blank=False, default='')
-    hashedPassword = models.CharField(max_length=300, blank=False, default='')
 
 class Connection(models.Model):
-    user_id = models.IntegerField()
-    expire_date = models.DateTimeField(auto_now=False, auto_now_add=True)
+    user_id = models.IntegerField(primary_key=True)
+    expire_date = models.DateTimeField(auto_now=False, auto_now_add=False)

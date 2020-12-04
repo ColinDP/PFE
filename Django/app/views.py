@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import Connection
-from app.serializers import ConnectionSerializer
+from app.serializers import ConnectionSerializer, EstablishementSerializer, DoctorSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -26,9 +26,9 @@ import uuid
 
 @api_view(['POST'])
 def login_request(request):
-    login_data = JSONParser().parse(request)
-    username = login_data['email']
-    password = login_data['password']
+    request_data = JSONParser().parse(request)
+    username = request_data['email']
+    password = request_data['password']
     user = authenticate(request, username = username, password = password)
     if user is not None:
         encrypted_id = encrypt(str(user.id))
@@ -41,12 +41,59 @@ def login_request(request):
 
 
 @api_view(['POST'])
-def register(request):
-    register_data = JSONParser().parse(request)
-    user = User.objects.create_user(register_data['email'], register_data['email'], register_data['password'])
+def register_establishment(request):
+    request_data = JSONParser().parse(request)
+    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    establishment = {'user_id' : user.id,
+                     'firstname' : request_data['first_name'],
+                     'lastname' : request_data['last_name'],
+                     'telephone' : request_data['telephone'],
+                     'street_name' : request_data['first_name'],
+                     'house_number' : request_data['first_name'],
+                     'postcode' : request_data['first_name'],
+                     'user_id' : request_data['first_name'],
+                     'tva' : request_data['num_tva'],
+                     'mail' : request_data['first_name']
+                    }
+    if user is not None: 
+        establishment_serializer = EstablishmentSerializer(data = establishment)
+        if establishment_serializer.is_valid():
+            establishment_serializer.save()
+            return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+        else : 
+            return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_ERROR) 
+    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def register_doctor(request):
+    request_data = JSONParser().parse(request)
+    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    establishment = {'user_id' : user.id,
+                     'firstname' : request_data['first_name'],
+                     'lastname' : request_data['last_name'],
+                     'telephone' : request_data['telephone'],
+                     'street_name' : request_data['first_name'],
+                     'house_number' : request_data['first_name'],
+                     'postcode' : request_data['first_name'],
+                     'user_id' : request_data['first_name'],
+                     'inami' : request_data['num_inami'],
+                     'mail' : request_data['first_name']
+                    }
+
+    establishment_serializer = EstablishmentSerializer(data = establishment)
     if user is not None: 
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
     return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def register_doctor(request):
+    request_data = JSONParser().parse(request)
+    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    
+    if user is not None: 
+        return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def get_qr_code(request):
@@ -83,38 +130,29 @@ def logout_request(request):
     User.objects.get(pk=4).is_authenticated = False
     print(User.objects.get(pk=4).is_authenticated)
     logout(request)
-    
     return JsonResponse({'image': 'User logged out'}, status=status.HTTP_201_CREATED)
 
 def encrypt(txt):
     try:
-        # convert integer etc to string first
         txt = str(txt)
-        # get the key from settings
-        cipher_suite = Fernet(settings.ENCRYPT_KEY) # key should be byte
-        # #input should be byte, so convert the text to byte
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)
         encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
-        # encode to urlsafe base64 format
         encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
         return encrypted_text
     except Exception as e:
-        # log the error if any
         logging.getLogger("error_logger").error(traceback.format_exc())
         return None
 
 def decrypt(string):
     try:
-        # base64 decode
         txt = base64.urlsafe_b64decode(txt)
         cipher_suite = Fernet(settings.ENCRYPT_KEY)
         decoded_text = cipher_suite.decrypt(txt).decode("ascii")     
         return decoded_text
     except Exception as e:
-        # log the error
         logging.getLogger("error_logger").error(traceback.format_exc())
         return None
 
-#Marc
 #Generate an unique id for the devices
 @api_view(['GET'])
 def get_device_id(request):
