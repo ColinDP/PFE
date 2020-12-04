@@ -1,16 +1,14 @@
 import React from "react";
-import PageTest from "./PageTest";
 import Scan from "./Scan";
-import TestRequest from "./TestRequest";
-
+import HomeScreen from "./HomeScreen";
+import { Route, Switch } from 'react-router-native';
 
 function Main() {
-  console.log("Main.js");
   return (
-    <>
-        <Scan/>
-        <TestRequest/>
-    </>
+    <Switch>
+      <Route exact path="/scan" component={Scan}/>
+      <Route exact path="/" component={HomeScreen}/>
+    </Switch>
   );
 }
 export default Main;

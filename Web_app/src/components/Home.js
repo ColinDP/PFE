@@ -15,22 +15,19 @@ const loginSchema = yup.object({
 const Home = () => {
   const [QRImage, setQRImage] = useState(<div></div>);
   const [PDF, setPDF] = useState(<div></div>);
-
-  const handleSubmitPDF = (testB64String, quantity) => {
-    setPDF(<GeneratePDF quantity={quantity} image={testB64String} />);
-  };
+  const token = localStorage.getItem("token")
 
   return (
     <div>
       <Logout />
       <Formik
         style={styles.container}
-        initialValues={{ quantity: 1 }}
+        initialValues={{ quantity: 1, token:token}}
         onSubmit={(data, actions) => {
           setQRImage(<p>waiting...</p>);
           Service.askForQR(data).then((resp) => {
-            console.log(resp.data.images);
-            console.log(token);
+            console.log(resp.data);
+            console.log(data);
             //const imageStringBase64 = resp.data.images.substring(2,resp.data.images.length -1);
             const image = resp.data.images;
             var images = [];

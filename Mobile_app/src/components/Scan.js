@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import DataService from "../services/Services";
+// import { createBrowserHistory } from "history";
+import { useHistory } from "react-router-dom"
 
 export default function Scan() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  const history = useHistory()
 
   useEffect(() => {
     (async () => {
@@ -34,6 +38,7 @@ export default function Scan() {
         console.log(e);
         alert(`Error : ${e}`);
       });
+    history.push("/");
   }
 
   if (hasPermission === null) {
