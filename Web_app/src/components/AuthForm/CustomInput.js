@@ -17,7 +17,11 @@ const CustomInput = (props) => {
     <>
       <TextInput
         error={hasError}
-        left={icon ? <TextInput.Icon name={icon} disabled /> : null}
+        left={
+          icon ? (
+            <TextInput.Icon name={icon} style={styles.icon} disabled />
+          ) : null
+        }
         underlineColor="grey"
         mode="outlined"
         label={label}
@@ -38,8 +42,13 @@ const CustomInput = (props) => {
 const styles = StyleSheet.create({
   textInput: {
     margin: 10,
-    height: 45,
+    height: 40,
     backgroundColor: "white",
+    flex: 1,
+  },
+  icon: {
+    position: "absolute",
+    top: "-8px",
   },
   errorText: {
     fontSize: 10,

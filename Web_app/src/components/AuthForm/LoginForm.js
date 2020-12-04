@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
+    marginBottom: "25px",
   },
   buttons: {
     justifyContent: "space-between",

@@ -17,6 +17,9 @@ const EstablishmentForm = ({ setAccount }) => {
         password: "",
         num_tva: "",
         telephone: "",
+        address_street: "",
+        address_number: "",
+        address_postcode: "",
       }}
       onSubmit={(data, actions) => {
         console.log(data);
@@ -29,31 +32,45 @@ const EstablishmentForm = ({ setAccount }) => {
             <Title style={styles.title}>
               Créer un compte pour votre établissement
             </Title>
-            <View style={styles.column}>
-              <Field component={CustomInput} name="last_name" label="Nom" />
-              <Field component={CustomInput} name="first_name" label="Prénom" />
-              <Field component={CustomInput} name="email" label="Email" />
+            <Field component={CustomInput} name="last_name" label="Nom" />
+            <Field component={CustomInput} name="first_name" label="Prénom" />
+            <Field
+              component={CustomInput}
+              name="num_tva"
+              label="Numéro de TVA"
+            />
+            <View style={styles.addressContainer}>
+              <View style={styles.streetInput}>
+                <Field
+                  component={CustomInput}
+                  name="address_street"
+                  label="Rue"
+                />
+              </View>
+              <View style={styles.numberInput}>
+                <Field
+                  component={CustomInput}
+                  name="address_number"
+                  label="n°"
+                />
+              </View>
+              <View style={styles.postcodeInput}>
+                <Field
+                  component={CustomInput}
+                  name="address_postcode"
+                  label="Code"
+                />
+              </View>
             </View>
-            <View style={styles.column}>
-              <Field
-                component={CustomInput}
-                type="password"
-                name="password"
-                label="Password"
-                secureTextEntry
-              />
-
-              <Field
-                component={CustomInput}
-                name="num_tva"
-                label="Numéro de TVA"
-              />
-              <Field
-                component={CustomInput}
-                name="telephone"
-                label="Téléphone"
-              />
-            </View>
+            <Field component={CustomInput} name="telephone" label="Téléphone" />
+            <Field component={CustomInput} name="email" label="Email" />
+            <Field
+              component={CustomInput}
+              type="password"
+              name="password"
+              label="Password"
+              secureTextEntry
+            />
             <Card.Actions style={styles.buttons}>
               <IconButton
                 color="#808080"
@@ -73,7 +90,6 @@ const EstablishmentForm = ({ setAccount }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: "500px",
     marginLeft: "auto",
     marginRight: "auto",
     paddingTop: "80px",
@@ -82,7 +98,19 @@ const styles = StyleSheet.create({
     borderWidth: "1px",
     borderRadius: "10px",
   },
-  column: {},
+  addressContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  streetInput: {
+    width: "65%",
+  },
+  numberInput: {
+    width: "15%",
+  },
+  postcodeInput: {
+    width: "20%",
+  },
   title: {
     textAlign: "center",
   },

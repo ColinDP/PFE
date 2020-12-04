@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import SelectAccountForm from "components/AuthForm/SelectAccountForm";
 import { View } from "react-native";
 import { Card, Button, IconButton } from "react-native-paper";
-import DoctorForm from "./DoctorForm";
-import EstablishmentForm from "./EstablishmentForm";
+import DoctorForm from "components/AuthForm/DoctorForm";
+import EstablishmentForm from "components/AuthForm/EstablishmentForm";
 
 const RegisterForm = ({ setShowRegisterForm }) => {
   const [account, setAccount] = useState("");
