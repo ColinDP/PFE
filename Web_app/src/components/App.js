@@ -5,6 +5,7 @@ import { StyleSheet, View } from "react-native";
 import RegisterForm from "components/AuthForm/RegisterForm";
 import LoginForm from "components/AuthForm/LoginForm";
 import Home from "components/Home";
+import GeneratePDF from "./GeneratePDF";
 
 const App = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
@@ -21,6 +22,9 @@ const App = () => {
       </Route>
       <Route exact path="/Home" exact>
         <Home />
+      </Route>
+      <Route exact path="/PDF" exact>   
+        <GeneratePDF quantity={1}/>
       </Route>
     </Switch>
   );

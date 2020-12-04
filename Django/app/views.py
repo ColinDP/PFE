@@ -48,17 +48,18 @@ def get_qr_code(request):
     print(User.objects.get(pk=4).is_authenticated)
 
     get_qr_code_data = JSONParser().parse(request)
-    token = get_qr_code_data['token']
+    #token = get_qr_code_data['token']
+
     #number_qr_codes = get_qr_code_data['number']
     #if request._request.user.is_authenticated is not True:
         #return JsonResponse({'response': 'Not connected'}, status=status.HTTP_400_BAD_REQUEST)
     #if not request.user.is_authenticated:
     #    return JsonResponse({'response': 'Not connected'}, status=status.HTTP_400_BAD_REQUEST)
     qr = pyqrcode.create(1)
-    qr.png("test1.png", scale = 2)
-    data = decode(Image.open('test1.png'))
+    qr.png("testQR.svg",scale=5)
+    data = decode(Image.open("testQR.svg"))
     encoded_string =''
-    with open("test1.png", "rb") as image_file:
+    with open("testQR.svg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
     return JsonResponse({'image': str(encoded_string)}, status=status.HTTP_201_CREATED)
     #return JsonResponse({'response': 'Email already used'}, status=status.HTTP_401_BAD_REQUEST)
