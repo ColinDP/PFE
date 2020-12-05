@@ -20,9 +20,12 @@ class Qrcode_Doctor(models.Model):
     )
     used = models.BooleanField()
 
-class Entries_Qrcodes_Client(models.Model):
+class Entries_Scans(models.Model):
     qrcode_id = models.CharField(max_length=100, blank=False, default='')
-    client_id = models.IntegerField()
+    phone = models.ForeignKey(
+        'Phones',
+        on_delete=models.CASCADE,
+    )
     date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 class Establishment(models.Model):
