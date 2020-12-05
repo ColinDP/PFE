@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import Connection, Doctor, Establishment
-from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer
+from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -105,35 +105,46 @@ def register_doctor(request):
 @api_view(['POST'])
 def get_qr_code(request):
     request_data = JSONParser().parse(request)
-    # token = request_data['token']
-    # user_id = int(decrypt(token))
-    # connection = get_object_or_404(Connection, user_id = user_id)
-    # if connection is not None :
-    #     print('working')
-    # else :
-    #     return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+    token = request_data['token']
+    user_id = int(decrypt(token))
+    print()
+    connection = get_object_or_404(Connection, user_id = user_id)
+    if connection is not None :
+        print('working')
+    else :
+        return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
     
     # generates n qr_codes
     n_qr_codes = request_data['quantity']
+    role = request_date['role']
     i = 0
     qr_codes_list = []
     while i < int(n_qr_codes):
-        # besoin de générer un fichier pour les médecins et les établissement où se trouve l'id suivant
         #générer id aléatoire
-        id
-        id = uuid.uuid4()
-        #enregistrer cet id dans DB
-        qr = pyqrcode.create(id)
+        qr_code_id = uuid.uuid4()
+        if role == 'E':
+            # Generates an establishement qr_code
+            qr_code_id_role = '0' + str(qr_code_id)
+            qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id}
+            qr_code_serializer = Qrcode_EstablishmentSerializer(data = qr_code)
+        else :
+            # Generates a doctor qr_code
+            qr_code_id_role = '1' + str(qr_code_id)
+            qr_code = {'qrcode_id' : qr_code_id_role, 'doctor' : user_id, 'used' : False}
+            qr_code_serializer = Qrcode_DoctorSerializer(data = qr_code)
+        # Saves the qr_code to the DB 
+        if qr_code_serializer.is_valid():
+            qr_code_serializer.save()
+        else : 
+            return JsonResponse({'response': 'The data has an invalid format and can not be added to DB'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        qr = pyqrcode.create(str(qr_code_id_role))
         qr.png("testQR.svg",scale=5)
         data = decode(Image.open("testQR.svg"))
         encoded_string =''
         with open("testQR.svg", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
         qr_codes_list.append(str(encoded_string))
-        i = i+1 
-
-    # Toujours besoin de les log en db maintenant
-
+        i = i+1
     return JsonResponse({'images': qr_codes_list}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])

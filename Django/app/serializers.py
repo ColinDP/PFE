@@ -1,11 +1,6 @@
 from rest_framework import serializers 
-from app.models import Connection
-from app.models import Establishment
-from app.models import Doctor
+from app.models import Connection, Doctor, Establishment, Qrcode_Doctor, Qrcode_Establishment
 
-
- 
- 
 class ConnectionSerializer(serializers.ModelSerializer):
  
     class Meta:
@@ -39,4 +34,19 @@ class DoctorSerializer(serializers.ModelSerializer):
                   'postcode',
                   'inami',
                   'mail'
+                    )
+
+class Qrcode_DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qrcode_Doctor
+        fields = ('qrcode_id',
+                  'doctor',
+                  'used'         
+                    )
+
+class Qrcode_EstablishmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qrcode_Establishment
+        fields = ('qrcode_id',
+                  'establishment'
                     )
