@@ -30,6 +30,6 @@ def handle_app_launched(request):
     print("id new : ")
     print(id)
     phoneID = Phones.objects.create(phone_id=id)
-    if phoneID is not None: 
-        return JsonResponse({'response': 'New phone added'}, status=status.HTTP_201_CREATED)
+    if phoneID is not None:
+        return JsonResponse({'response': 'New phone added', 'id' : id}, status=status.HTTP_201_CREATED)
     return JsonResponse({'response': 'Phone counldnt be added'}, status=status.HTTP_400_BAD_REQUEST)

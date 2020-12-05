@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import DataService from "../services/Services";
 import * as SecureStore from 'expo-secure-store';
 import CheckState from "./CheckState";
-import { StyleSheet, View, Text, Button } from "react-native";
 
 const Authenticate = () => {
 
@@ -17,15 +16,16 @@ const Authenticate = () => {
 
     console.log("object id send to api : " + JSON.stringify(deviceId));
 
-    
-    /*DataService.getInfo(JSON.stringify(deviceId))
-      .then((resp) => {
-        SecureStore.setItemAsync("device_id", response.data.device_id);
-        console.log("id recu de l'api : " + response);
+    DataService.getInfo(JSON.stringify(deviceId))
+      .then((response) => {
+        SecureStore.setItemAsync("device_id", response.id);
+        setDeviceId({"id" : response.id});
+        console.log("id recu de l'api : " + response.id);
+        console.log(response.response);
       })
       .catch((e) => {
         console.log(e);
-      });*/
+      });
 
       return (
         <CheckState/>
