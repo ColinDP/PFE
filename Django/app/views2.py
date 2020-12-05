@@ -17,17 +17,17 @@ def handle_scanned_request(request):
 @api_view(['POST'])
 def handle_app_launched(request):
     request_data = JSONParser().parse(request)
-    id = request_data['id']
-    if(id is not None):
+    reqID = request_data['id']
+    if(reqID is not None):
         try:
-            phoneID = Phones.objects.get(pk=id)
+            dbID = Phones.objects.get(pk=reqID)
             # get les gens qui ont scan les mm QR dans un laps de temps
             # return : soit liste contenant chaque danger (lieu, heure), soit msg "vous etes safe"
             return JsonResponse({'response': 'get dans BD'}, status=status.HTTP_201_CREATED)
         except Phones.DoesNotExist:
             return JsonResponse({'response': 'Phone not in DB'}, status=status.HTTP_400_BAD_REQUEST)
-    id = uuid.uuid4()
-    phoneID = Phones.objects.create(phone_id=id)
-    if phoneID is not None: 
-        return JsonResponse({'response': 'New phone registered'}, status=status.HTTP_201_CREATED)
+    newID = uuid.uuid4()
+    dbID = Phones.objects.create(phone_id=newID)
+    if dbID is not None: 
+        return JsonResponse({'response': 'New : ' + str(newID)}, status=status.HTTP_201_CREATED)
     return JsonResponse({'response': 'Phone counldnt be registered'}, status=status.HTTP_400_BAD_REQUEST)

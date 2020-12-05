@@ -2,35 +2,30 @@ import React, { useState } from "react";
 import DataService from "../services/Services";
 import * as SecureStore from 'expo-secure-store';
 import CheckState from "./CheckState";
-import { StyleSheet, View, Text, Button } from "react-native";
 
 const Authenticate = () => {
 
-    const [id, setId] = useState("");
+  const [deviceId, setDeviceId] = useState("");
+    /*SecureStore.deleteItemAsync("device_id").then((reject) => {
+    });*/
 
-    let data = SecureStore.getItemAsync("device_id");
-    console.log("from store : " + data); //a regler
+    SecureStore.getItemAsync("device_id").then((response) => {
+      setDeviceId({"id" : response});
+      console.log("stored id : " + response);
+    });
 
-    DataService.getInfo(data)
+    console.log("object id send to api : " + JSON.stringify(deviceId));
+
+    DataService.getInfo(JSON.stringify(deviceId))
       .then((response) => {
-        SecureStore.setItemAsync("device_id", response.data.device_id);
-        console.log(response.data.device_id);
+        SecureStore.setItemAsync("device_id", response.id);
+        setDeviceId({"id" : response.id});
+        console.log("id recu de l'api : " + response.id);
+        console.log(response.response);
       })
       .catch((e) => {
         console.log(e);
       });
-      
-    /*DataService.getDeviceId()
-      .then((response) => {
-
-
-
-        console.log(response.data.device_id);
-      })
-      .catch((e) => {
-        console.log(e);
-      });*/
-
 
       return (
         <CheckState/>

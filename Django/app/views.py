@@ -5,8 +5,8 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.contrib.auth.models import User
-from app.models import Connection
-from app.serializers import ConnectionSerializer
+from app.models import Connection, Doctor, Establishment
+from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -26,26 +26,80 @@ import uuid
 
 @api_view(['POST'])
 def login_request(request):
-    login_data = JSONParser().parse(request)
-    username = login_data['email']
-    password = login_data['password']
+    request_data = JSONParser().parse(request)
+    username = request_data['email']
+    password = request_data['password']
+    print(password, username)
+    print('hey')
     user = authenticate(request, username = username, password = password)
+    print(user)
     if user is not None:
         encrypted_id = encrypt(str(user.id))
         connection = {'user_id' : user.id, 'expire_date' : datetime.now()}
         connection_serializer = ConnectionSerializer(data = connection)
         if connection_serializer.is_valid():
             connection_serializer.save()
-            return JsonResponse({'response': 'User Connected', 'token' : encrypted_id}, status=status.HTTP_200_OK)
+            try:
+                establishment = Establishment.objects.get(pk=user.id)
+            except Establishment.DoesNotExist:
+                establishment = None
+                print('hey')
+            if establishment is not None :
+                return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'E'}, status=status.HTTP_200_OK)
+            doctor = Doctor.objects.get(pk=user.id)
+            if doctor is not None : 
+                return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'D'}, status=status.HTTP_200_OK)
     return JsonResponse({'response': 'Authentification Failed'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
-def register(request):
-    register_data = JSONParser().parse(request)
-    user = User.objects.create_user(register_data['email'], register_data['email'], register_data['password'])
+def register_establishment(request):
+    request_data = JSONParser().parse(request)
+    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    establishment = {'user_id' : int(user.id),
+                     'firstname' : request_data['first_name'],
+                     'lastname' : request_data['last_name'],
+                     'telephone' : request_data['telephone'],
+                     'street_name' : request_data['address_street'],
+                     'house_number' : int(request_data['address_number']),
+                     'postcode' : request_data['address_postcode'],
+                     'tva' : request_data['num_tva'],
+                     'mail' : request_data['email']
+                    }
     if user is not None: 
+        establishment_serializer = EstablishmentSerializer(data = establishment)
+        if establishment_serializer.is_valid():
+            establishment_serializer.save()
+            return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+        else : 
+            return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def register_doctor(request):
+
+    request_data = JSONParser().parse(request)
+    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    print(user.id)
+
+    doctor =  { 'user_id' : int(user.id),
+                'firstname' : request_data['first_name'],
+                'lastname' : request_data['last_name'],
+                'telephone' : request_data['telephone'],
+                'street_name' : request_data['address_street'],
+                'house_number' : int(request_data['address_number']),
+                'postcode' : request_data['address_postcode'],
+                'inami' : request_data['num_inami'],
+                'mail' : request_data['email']
+            }
+    
+    doctor_serializer = DoctorSerializer(data = doctor)
+    print(doctor_serializer)
+    if doctor_serializer.is_valid():
+        doctor_serializer.save()
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    else : 
+        return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
     return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -65,7 +119,11 @@ def get_qr_code(request):
     qr_codes_list = []
     while i < int(n_qr_codes):
         # besoin de générer un fichier pour les médecins et les établissement où se trouve l'id suivant
-        qr = pyqrcode.create(1)
+        #générer id aléatoire
+        id
+        id = uuid.uuid4()
+        #enregistrer cet id dans DB
+        qr = pyqrcode.create(id)
         qr.png("testQR.svg",scale=5)
         data = decode(Image.open("testQR.svg"))
         encoded_string =''
@@ -80,41 +138,33 @@ def get_qr_code(request):
 
 @api_view(['POST'])
 def logout_request(request):
-    User.objects.get(pk=1).is_authenticated = False
-    print(User.objects.get(pk=1).is_authenticated)
-    logout(request)
-    
-    return JsonResponse({'image': 'User logged out'}, status=status.HTTP_201_CREATED)
+    request_data = JSONParser().parse(request)
+    token = request_data['token']
+    user_id = int(decrypt(token))
+    Connection.objects.filter(user_id = user_id).delete()
+    return JsonResponse({'response': 'User logged out'}, status=status.HTTP_200_OK)
 
 def encrypt(txt):
     try:
-        # convert integer etc to string first
         txt = str(txt)
-        # get the key from settings
-        cipher_suite = Fernet(settings.ENCRYPT_KEY) # key should be byte
-        # #input should be byte, so convert the text to byte
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)
         encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
-        # encode to urlsafe base64 format
         encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
         return encrypted_text
     except Exception as e:
-        # log the error if any
-        logging.getLogger("error_logger").error(traceback.format_exc())
+        print('error :', e.message)
         return None
 
 def decrypt(string):
     try:
-        # base64 decode
-        txt = base64.urlsafe_b64decode(txt)
+        text = base64.urlsafe_b64decode(string)
         cipher_suite = Fernet(settings.ENCRYPT_KEY)
-        decoded_text = cipher_suite.decrypt(txt).decode("ascii")     
+        decoded_text = cipher_suite.decrypt(text).decode("ascii")     
         return decoded_text
     except Exception as e:
-        # log the error
-        logging.getLogger("error_logger").error(traceback.format_exc())
+        print('error :', e.message)
         return None
 
-#Marc
 #Generate an unique id for the devices
 @api_view(['GET'])
 def get_device_id(request):

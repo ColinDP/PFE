@@ -60,6 +60,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:19006',
     'http://localhost:19000',
 )
+ALLOWED_HOSTS = ['*']
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,6 +159,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 ENCRYPT_KEY = b'iDJpljxUBBsacCZ50GpSBff6Xem0R-giqXXnBFGJ2Rs='
+
 SESSION_SAVE_EVERY_REQUEST=True
 
 
