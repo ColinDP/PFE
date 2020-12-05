@@ -13,8 +13,7 @@ const EstablishmentForm = ({ setAccount }) => {
   return (
     <Formik
       initialValues={{
-        last_name: "",
-        first_name: "",
+        name: "",
         email: "",
         password: "",
         num_tva: "",
@@ -36,8 +35,7 @@ const EstablishmentForm = ({ setAccount }) => {
             <Title style={styles.title}>
               Créer un compte pour votre établissement
             </Title>
-            <Field component={CustomInput} name="last_name" label="Nom" />
-            <Field component={CustomInput} name="first_name" label="Prénom" />
+            <Field component={CustomInput} name="name" label="Nom" />
             <Field
               component={CustomInput}
               name="num_tva"
