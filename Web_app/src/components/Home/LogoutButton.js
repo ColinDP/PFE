@@ -8,7 +8,9 @@ const LogoutButton = ({ style }) => {
   const history = useHistory();
 
   const handlePress = () => {
-    AuthService.logout().then((resp) => {
+    const token = localStorage.getItem("token")
+    const data = {token}
+    AuthService.logout(data).then((resp) => {
       localStorage.removeItem("token");
       history.push("/");
     });
