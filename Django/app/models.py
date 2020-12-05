@@ -6,14 +6,14 @@ class Tutorial(models.Model):
     published = models.BooleanField(default=False)
 
 class Qrcode_Establishment(models.Model):
-    qrcode_id = models.IntegerField(primary_key = True)
+    qrcode_id = models.CharField(max_length=100, blank=False, default='', primary_key = True)
     establishment = models.ForeignKey(
         'Establishment',
         on_delete=models.CASCADE,
     )
 
 class Qrcode_Doctor(models.Model):
-    qrcode_id = models.IntegerField(primary_key = True)
+    qrcode_id = models.CharField(max_length=100, blank=False, default='', primary_key = True)
     doctor = models.ForeignKey(
         'Doctor',
         on_delete=models.CASCADE,
@@ -21,7 +21,7 @@ class Qrcode_Doctor(models.Model):
     used = models.BooleanField()
 
 class Entries_Qrcodes_Client(models.Model):
-    qrcode_id = models.IntegerField()
+    qrcode_id = models.CharField(max_length=100, blank=False, default='')
     client_id = models.IntegerField()
     date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
 
