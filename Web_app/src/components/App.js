@@ -4,8 +4,8 @@ import { StyleSheet, View } from "react-native";
 // import { Route, Switch, Link } from 'react-router-native';
 import RegisterForm from "components/AuthForm/RegisterForm";
 import LoginForm from "components/AuthForm/LoginForm";
-import Home from "components/Home";
-import GeneratePDF from "./GeneratePDF";
+/* import Home from "components/Home";*/
+import Home from "components/Home/Home";
 
 const App = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
