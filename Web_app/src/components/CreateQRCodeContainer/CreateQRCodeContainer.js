@@ -14,20 +14,26 @@ const CreateQRCodeContainer = () => {
   const handleFormSubmit = (data) => {
     setShowDownloadLink(false);
     setCharging(true);
-    const payload = { ...data };
 
-    Service.askForQR(data).then((resp) => {
-      const image = resp.data.images;
-      var images = [];
-      for (var i = 0; i < image.length; i++) {
-        images.push(
-          "data:image/png;base64," + image[i].substring(2, image[i].length - 1)
-        );
-      }
-      setImages(images);
-      setCharging(false);
-      setShowDownloadLink(true);
-    });
+    Service.askForQR(data)
+      .then((resp) => {
+        const image = resp.data.images;
+        var images = [];
+        for (var i = 0; i < image.length; i++) {
+          images.push(
+            "data:image/png;base64," +
+              image[i].substring(2, image[i].length - 1)
+          );
+        }
+        setImages(images);
+        setCharging(false);
+        setShowDownloadLink(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        setCharging(false);
+        setShowDownloadLink(false);
+      });
   };
   return (
     <Card style={styles.cardContainer}>

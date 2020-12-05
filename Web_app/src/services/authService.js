@@ -18,9 +18,14 @@ const logout = () => {
   return http.post("/logout", data).then((resp) => resp.data);
 };
 
+const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem("user"));
+};
+
 export default {
   authenticateUser,
   createDoctor,
   createEstablishment,
   logout,
+  getCurrentUser,
 };

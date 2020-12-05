@@ -26,7 +26,7 @@ const DoctorForm = ({ setAccount }) => {
       onSubmit={(data, actions) => {
         console.log(data);
         AuthService.createDoctor(data).then((resp) => {
-          history.push("/");
+          history.push("/login");
         });
       }}
     >
