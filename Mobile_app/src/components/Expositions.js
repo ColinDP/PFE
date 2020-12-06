@@ -4,8 +4,9 @@ import * as SecureStore from 'expo-secure-store';
 import { StyleSheet, View, Text, Button } from "react-native";
 
 
-const CheckState = () => {
+const Expositions = (props) => {
 
+    
 
 
     const styles = StyleSheet.create({
@@ -29,4 +30,4 @@ const CheckState = () => {
       );
     };
 
-export default CheckState;
+export default Expositions;
