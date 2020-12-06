@@ -14,8 +14,13 @@ const loginSchema = yup.object({
   password: yup.string(),
 });
 
-const LoginForm = ({ setShowRegisterForm }) => {
+const LoginForm = () => {
   const history = useHistory();
+
+  const handleRedirectToRegister = () => {
+    history.push("/register");
+  };
+
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
@@ -32,7 +37,6 @@ const LoginForm = ({ setShowRegisterForm }) => {
             localStorage.setItem("user", JSON.stringify(user));
           }
           history.push("/home");
-          console.log(localStorage.getItem("token"));
         });
       }}
       validationSchema={loginSchema}
@@ -64,7 +68,7 @@ const LoginForm = ({ setShowRegisterForm }) => {
               secureTextEntry
             />
             <Card.Actions style={styles.buttons}>
-              <Button mode="flat" onPress={() => setShowRegisterForm(true)}>
+              <Button mode="flat" onPress={handleRedirectToRegister}>
                 Créer un compte
               </Button>
               <Button mode="contained" onPress={handleSubmit}>

@@ -25,7 +25,7 @@ const EstablishmentForm = ({ setAccount }) => {
       onSubmit={(data, actions) => {
         console.log(data);
         AuthService.createEstablishment(data).then((resp) => {
-          history.push("/");
+          history.push("/login");
         });
       }}
     >
