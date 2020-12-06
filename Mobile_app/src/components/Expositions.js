@@ -4,11 +4,22 @@ import * as SecureStore from 'expo-secure-store';
 import { StyleSheet, View, Text, Button } from "react-native";
 
 
-const Expositions = (props) => {
+const Expositions = ({infections}) => {
+    console.log(infections);
 
-    
-
-
+    function renderSwitch(code){
+      switch(code){
+        case 0:
+          return <Text style={styles.text}>Vous êtes safe</Text>
+        case 3:
+          console.log("code est 3");
+          return <View>
+            <Text style={styles.text}>Attention ! Vous avez été en contact avec une ou plusieurs personnes positives ces 10 derniers jours.</Text>
+            <Text/>
+            <Text style={styles.text}>Il ya eu exposition dans {infections.expositions} endroits différents</Text>
+          </View>
+      }
+    }
     const styles = StyleSheet.create({
         pageTestContainer: {
           flex: 1,
@@ -23,11 +34,11 @@ const Expositions = (props) => {
         },
       });
 
+
       return (
         <View style={styles.pageTestContainer}>
-          <Text style={styles.text}>Vous êtes safe</Text>
+          {renderSwitch(infections.code)}
         </View>
       );
-    };
-
+};
 export default Expositions;
