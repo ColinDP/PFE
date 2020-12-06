@@ -56,3 +56,4 @@ class Connection(models.Model):
 
 class Phones(models.Model):
     phone_id = models.CharField(max_length=50, blank=False, primary_key = True)
+    sickness_date = models.DateTimeField(auto_now=False, auto_now_add=False)
