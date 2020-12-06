@@ -5,8 +5,8 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.contrib.auth.models import User
-from app.models import Connection, Doctor, Establishment
-from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer
+from app.models import Connection, Doctor, Establishment,Qrcode_Doctor, Qrcode_Establishment, Entries_Scans
+from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer,ScanSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -30,12 +30,11 @@ def login_request(request):
     username = request_data['email']
     password = request_data['password']
     print(password, username)
-    print('hey')
     user = authenticate(request, username = username, password = password)
-    print(user)
     if user is not None:
         encrypted_id = encrypt(str(user.id))
         connection = {'user_id' : user.id, 'expire_date' : datetime.now()}
+        print("date : ", datetime.now())
         connection_serializer = ConnectionSerializer(data = connection)
         if connection_serializer.is_valid():
             connection_serializer.save()
@@ -57,8 +56,7 @@ def register_establishment(request):
     request_data = JSONParser().parse(request)
     user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
     establishment = {'user_id' : int(user.id),
-                     'firstname' : request_data['first_name'],
-                     'lastname' : request_data['last_name'],
+                     'name' : request_data['name'],
                      'telephone' : request_data['telephone'],
                      'street_name' : request_data['address_street'],
                      'house_number' : int(request_data['address_number']),
@@ -116,7 +114,7 @@ def get_qr_code(request):
     
     # generates n qr_codes
     n_qr_codes = request_data['quantity']
-    role = request_date['role']
+    role = request_data['role']
     i = 0
     qr_codes_list = []
     while i < int(n_qr_codes):
@@ -154,6 +152,31 @@ def logout_request(request):
     user_id = int(decrypt(token))
     Connection.objects.filter(user_id = user_id).delete()
     return JsonResponse({'response': 'User logged out'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def handle_scanned_request(request):
+    register_data = JSONParser().parse(request)
+    qr_code = register_data["QRCodeContent"]
+    phone_id = register_data["phoneId"]
+    scan_date = datetime.strptime(register_data["scanDate"], '%Y-%m-%d %H:%M:%S.%f')
+    qr_code_db = None
+   
+    if(qr_code[0]=='1'):
+        # code médecin
+        qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
+        if qr_code_db is None :
+            return JsonResponse({'response': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    else :
+        # code Etablissement
+        qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
+        if qr_code_db is None :
+            return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
+    scan_serializer = ScanSerializer(data = entry_scan)
+    if scan_serializer.is_valid() :
+        scan_serializer.save()
+        return JsonResponse({'message': 'scan handled'}, status=status.HTTP_201_CREATED)
+    return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
 def encrypt(txt):
     try:

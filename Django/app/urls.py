@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^api/get_code$', views.get_qr_code),
     url(r'^api/logout$', views.logout_request),
     url(r'^api/get_device_id$', views.get_device_id),
-    url(r'^api/sendMobileScan$', views2.handle_scanned_request),
+    url(r'^api/sendMobileScan$', views.handle_scanned_request),
     url(r'^api/contactServer$', views2.handle_app_launched)
 
 ]
