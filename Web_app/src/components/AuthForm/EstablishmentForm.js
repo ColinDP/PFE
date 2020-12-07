@@ -105,6 +105,7 @@ const EstablishmentForm = ({ setAccount }) => {
               type="password"
               name="password"
               label="Password"
+              secureTextEntry
             />
             <Card.Actions style={styles.buttons}>
               <IconButton
