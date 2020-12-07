@@ -146,6 +146,7 @@ def logout_request(request):
 def handle_scanned_request(request):
     register_data = JSONParser().parse(request)
     qr_code = register_data["QRCodeContent"]
+    print(qr_code)
     phone_id = register_data["phoneId"]
     scan_date = utc.localize(datetime.now())
     qr_code_db = None
@@ -154,6 +155,9 @@ def handle_scanned_request(request):
         qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
         if qr_code_db is None :
             return JsonResponse({'code': 0, 'error': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        qr_code_db = Qrcode_Doctor.objects.get(pk = qr_code)
+        qr_code_db.used = True
+        qr_code_db.save()
         phone = Phones.objects.get(pk = phone_id)
         phone.sickness_date = utc.localize(datetime.now())
         phone.save()

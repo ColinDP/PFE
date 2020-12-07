@@ -20,6 +20,7 @@ export default function Scan() {
   }, []);
 
   const sendMobileScan = async ({ data }) => {
+    console.log(data)
     setScanned(true);
     var phone_Id = await(SecureStore.getItemAsync("device_id"))
     var fields = {
