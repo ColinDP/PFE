@@ -3,10 +3,33 @@ import { StyleSheet, View } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import AuthService from "services/authService";
-import CustomInput from "components/AuthForm/CustomInput";
+import CustomInput from "components/utils/CustomInput";
 import { Button, Card, Title, IconButton } from "react-native-paper";
 import backIcon from "assets/svg/arrow-left.svg";
 import { useHistory } from "react-router-dom";
+
+const EstablishmentSchema = yup.object({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password must contain at least 8 characters")
+    .required("Password is required"),
+  num_tva: yup
+    .string()
+    .uppercase()
+    .matches(
+      "^(BE)[0-9]{9}$",
+      'Invalid TVA number (must start with "BE" followed by 10 digits)'
+    )
+    .required("TVA is required"),
+  address_street: yup.string(),
+  address_number: yup.number(),
+  address_postcode: yup
+    .string()
+    .matches("^[1-9]{1}[0-9]{3}$", "Invalid postal code"),
+  telephone: yup.number(),
+});
 
 const EstablishmentForm = ({ setAccount }) => {
   const history = useHistory();
@@ -28,6 +51,9 @@ const EstablishmentForm = ({ setAccount }) => {
           history.push("/login");
         });
       }}
+      validationSchema={EstablishmentSchema}
+      validateOnChange={true}
+      validateOnBlur={true}
     >
       {({ handleSubmit, isValid }) => (
         <Card style={styles.cardContainer}>
@@ -39,7 +65,8 @@ const EstablishmentForm = ({ setAccount }) => {
             <Field
               component={CustomInput}
               name="num_tva"
-              label="Numéro de TVA"
+              label="Numéro de TVA (BE)"
+              placeholder="BE1234567890"
             />
             <View style={styles.addressContainer}>
               <View style={styles.streetInput}>
@@ -71,7 +98,6 @@ const EstablishmentForm = ({ setAccount }) => {
               type="password"
               name="password"
               label="Password"
-              secureTextEntry
             />
             <Card.Actions style={styles.buttons}>
               <IconButton

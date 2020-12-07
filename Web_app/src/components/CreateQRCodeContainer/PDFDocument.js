@@ -16,6 +16,9 @@ const PDFDocument = ({ data }) => {
           <View style={styles.section}>
             <Text>Scan me to save lives!!</Text>
             <Image style={styles.image} source={image} />
+            <Text>
+              `${index + 1} / ${data.length}`
+            </Text>
           </View>
         </Page>
       ))}

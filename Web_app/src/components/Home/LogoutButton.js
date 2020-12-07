@@ -8,10 +8,10 @@ const LogoutButton = ({ style }) => {
   const history = useHistory();
 
   const handlePress = () => {
-    const token = localStorage.getItem("token")
-    const data = {token}
+    const token = localStorage.getItem("token");
+    const data = { token };
     AuthService.logout(data).then((resp) => {
-      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       history.push("/");
     });
   };

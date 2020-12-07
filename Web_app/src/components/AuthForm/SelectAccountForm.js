@@ -66,11 +66,11 @@ const SelectAccountForm = ({ setAccount }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: "500px",
+    width: "400px",
     marginLeft: "auto",
     marginRight: "auto",
-    paddingTop: "80px",
-    paddingBottom: "80px",
+    paddingTop: "40px",
+    paddingBottom: "40px",
     borderColor: "#D3D3D3",
     borderWidth: "1px",
     borderRadius: "10px",

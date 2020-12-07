@@ -5,7 +5,7 @@ import { TextInput, Text } from "react-native-paper";
 const CustomInput = (props) => {
   const {
     field: { name, onBlur, onChange, value },
-    form: { errors, touched, setFieldTouched },
+    form: { errors, setErrors, touched, setFieldTouched },
     label,
     icon,
     ...inputProps
@@ -27,7 +27,9 @@ const CustomInput = (props) => {
         label={label}
         style={[styles.textInput, hasError && styles.errorInput]}
         value={value}
-        onChangeText={(text) => onChange(name)(text)}
+        onChangeText={(text) => {
+          onChange(name)(text);
+        }}
         onBlur={() => {
           setFieldTouched(name);
           onBlur(name);
@@ -41,7 +43,7 @@ const CustomInput = (props) => {
 
 const styles = StyleSheet.create({
   textInput: {
-    margin: 10,
+    margin: 7,
     height: 40,
     backgroundColor: "white",
     flex: 1,
@@ -51,7 +53,8 @@ const styles = StyleSheet.create({
     top: "-8px",
   },
   errorText: {
-    fontSize: 10,
+    marginLeft: 10,
+    fontSize: 12,
     color: "red",
   },
   errorInput: {
