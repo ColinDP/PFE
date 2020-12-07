@@ -72,6 +72,7 @@ const LoginForm = () => {
                 type="password"
                 name="password"
                 label="Password"
+                secureTextEntry
               />
               <Card.Actions style={styles.buttons}>
                 <Button mode="flat" onPress={handleRedirectToRegister}>
