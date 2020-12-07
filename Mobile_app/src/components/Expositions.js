@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import DataService from "../services/Service";
-import * as SecureStore from 'expo-secure-store';
+import React from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
-
+import { DefaultTheme, Provider, Avatar, Card, Title, Paragraph } from 'react-native-paper';
 
 const Expositions = ({infections}) => {
     console.log(infections);
@@ -10,35 +8,30 @@ const Expositions = ({infections}) => {
     function renderSwitch(code){
       switch(code){
         case 0:
-          return <Text style={styles.text}>Vous êtes safe</Text>
+          return <>
+              <Card.Title title="Risque faible"/>
+                <Card.Content>
+                    <Paragraph>Pas d'exposition jusqu'a présent</Paragraph>
+                </Card.Content>
+              </>;
         case 3:
-          console.log("code est 3");
-          return <View>
-            <Text style={styles.text}>Attention ! Vous avez été en contact avec une ou plusieurs personnes positives ces 10 derniers jours.</Text>
-            <Text/>
-            <Text style={styles.text}>Il ya eu exposition dans {infections.expositions} endroits différents</Text>
-          </View>
+          return <>
+          <Card.Title title="Risque plus élevé"/>
+            <Card.Content>
+              <Paragraph>{infections.expositions} exposition(s)</Paragraph>
+            </Card.Content>
+          </>;
       }
     }
-    const styles = StyleSheet.create({
-        pageTestContainer: {
-          flex: 1,
-          backgroundColor: "#fff",
-          flexDirection: "column",
-          justifyContent: "center",
-        },
-        text: {
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: "bold"
-        },
-      });
+    const theme = {
+      ...DefaultTheme,
+      roundness: 6,
 
-
+    };
       return (
-        <View style={styles.pageTestContainer}>
+        <Card elevation={3} style={theme} >
           {renderSwitch(infections.code)}
-        </View>
+        </Card>
       );
 };
 export default Expositions;
