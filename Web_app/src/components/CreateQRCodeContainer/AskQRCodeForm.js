@@ -5,7 +5,7 @@ import { Formik, Field } from "formik";
 import * as yup from "yup";
 import { Card, Title, Button } from "react-native-paper";
 
-const loginSchema = yup.object({
+const QRCodeSchema = yup.object({
   quantity: yup.number().required("quantity is required"),
   quantity: yup.number().typeError("That doesn't look like a number"),
 });
@@ -15,7 +15,7 @@ const AskQRCodeForm = ({ handleFormSubmit }) => {
     <Formik
       initialValues={{ quantity: 1 }}
       onSubmit={(data) => handleFormSubmit(data)}
-      validationSchema={loginSchema}
+      validationSchema={QRCodeSchema}
     >
       {({ handleSubmit, isValid }) => (
         <>
