@@ -27,7 +27,8 @@ export default function Scan() {
     setScanned(true);
     var fields = {
       QRCodeContent: data,
-      phoneID: "1234",
+      phoneId: "1234",
+      scanDate: Date.now()
     };
     DataService.sendMobileScan(fields)
       .then(response => {

@@ -30,8 +30,7 @@ class Entries_Scans(models.Model):
 
 class Establishment(models.Model):
     user_id = models.IntegerField(primary_key= True)
-    firstname = models.CharField(max_length=50, blank=False, default='')
-    lastname = models.CharField(max_length=50, blank=False, default='')
+    name = models.CharField(max_length=50, blank=False, default='')
     telephone = models.CharField(max_length=13, blank=False, default='')
     street_name = models.CharField(max_length=100, blank=False, default='')
     house_number = models.IntegerField()
@@ -56,3 +55,4 @@ class Connection(models.Model):
 
 class Phones(models.Model):
     phone_id = models.CharField(max_length=50, blank=False, primary_key = True)
+    sickness_date =  models.DateTimeField(null=True, blank=True)
