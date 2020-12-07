@@ -59,10 +59,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8081',
     'http://localhost:19006',
     'http://localhost:19000',
+    'http://localhost:19004',
 )
-ALLOWED_HOSTS = ['*']
-
-
 ALLOWED_HOSTS = ['*']
 
 ROOT_URLCONF = 'Django.urls'

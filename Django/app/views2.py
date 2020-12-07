@@ -17,41 +17,35 @@ utc=pytz.UTC
 # codes renvoyés : 0 error, 1 welcome, 2 vous etes safe, 3 vous etes danger
 @api_view(['POST'])
 def handle_app_launched(request):
-    # request_data = JSONParser().parse(request)
-    # req_phone_id = request_data['id']
-    # print(req_phone_id)
-    # if(req_phone_id is not None): 
-    #     try:
-    #         # Get entriesscan (phone, moment > now - 10j)
-    #         # Foreach entry
-    #         #     Get entriesscan (entryQR, entryMoment+-1h)
-    #         #     Foreach entry
-    #         #         If its not this phone
-    #         #             Get phone (entryPhone)
-    #         #             If phone.sickDate > entryMoment - 2sem         && phone.sickDate <= entryMoment
-    #         #                 ...
-    #         expositions_count = 0
-    #         for this_phone_scan in Entries_Scans.objects.filter(phone_id = req_phone_id):
-    #             if (this_phone_scan.date_time > utc.localize(datetime.now() - timedelta(days=10))) & (this_phone_scan.date_time <= utc.localize(datetime.now())):
-    #                 for same_qrcode_scan in Entries_Scans.objects.filter(qrcode_id = this_phone_scan.qrcode_id):
-    #                     if (same_qrcode_scan.date_time > this_phone_scan.date_time - timedelta(hours=1)) & (same_qrcode_scan.date_time < this_phone_scan.date_time + timedelta(hours=1)) & (same_qrcode_scan.phone != this_phone_scan.phone):
-    #                         nearby_phones = Phones.objects.filter(phone_id = same_qrcode_scan.phone.phone_id)
-    #                         for nearby_phone in nearby_phones:
-    #                             if (nearby_phone.sickness_date > this_phone_scan.date_time - timedelta(days=10)) & (nearby_phone.sickness_date <= this_phone_scan.date_time + timedelta(days=10)):
-    #                                 expositions_count += 1
-    #         if expositions_count != 0:
-    #             return JsonResponse({'code': 3, 'expositions': expositions_count}, status=status.HTTP_201_CREATED)
-    #         return JsonResponse({'code': 2}, status=status.HTTP_201_CREATED)
-    #     except Phones.DoesNotExist:
-    #         return JsonResponse({'code': 0, 'error': 'DB operation error'}, status=status.HTTP_400_BAD_REQUEST)
-    newPhoneId = uuid.uuid4()
-    newPhone = {'phone_id': int(newPhoneId), 'sickness_date': datetime.min}
+    request_data = JSONParser().parse(request)
+    req_phone_id = request_data['id']
+    print("THIS PHONE : " + str(req_phone_id))
+    if(req_phone_id is not None): 
+        try:
+            expositions_count = 0
+            for this_phone_scan in Entries_Scans.objects.filter(phone_id = req_phone_id):
+                if (this_phone_scan.date_time > utc.localize(datetime.now() - timedelta(days=10))) & (this_phone_scan.date_time <= utc.localize(datetime.now())):
+                    for same_qrcode_scan in Entries_Scans.objects.filter(qrcode_id = this_phone_scan.qrcode_id):
+                        if (same_qrcode_scan.date_time > this_phone_scan.date_time - timedelta(hours=1)) & (same_qrcode_scan.date_time < this_phone_scan.date_time + timedelta(hours=1)) & (same_qrcode_scan.phone != this_phone_scan.phone):
+                            nearby_phones = Phones.objects.filter(phone_id = same_qrcode_scan.phone.phone_id)
+                            for nearby_phone in nearby_phones:
+                                if (nearby_phone.sickness_date > this_phone_scan.date_time - timedelta(days=10)) & (nearby_phone.sickness_date <= this_phone_scan.date_time + timedelta(days=10)):
+                                    print("NEARBY PHONE : " + str(nearby_phone.phone_id))
+                                    expositions_count += 1
+            if expositions_count != 0:
+                return JsonResponse({'code': 3, 'expositions': expositions_count}, status=status.HTTP_201_CREATED)
+            return JsonResponse({'code': 2}, status=status.HTTP_201_CREATED)
+        except Phones.DoesNotExist:
+            return JsonResponse({'code': 0, 'error': 'DB operation error'}, status=status.HTTP_400_BAD_REQUEST)
+    newPhoneId = str(uuid.uuid4())
+    newPhone = {'phone_id': newPhoneId, 'sickness_date': utc.localize(datetime.min)}
     phone_serializer = PhonesSerializer(data = newPhone)
     if phone_serializer.is_valid():
         try:
             phone_serializer.save()
         except Exception as e:
             return JsonResponse({'code': 0, 'error': 'Phone couldnt be added in DB'}, status=status.HTTP_400_BAD_REQUEST)
+        print("NEW PHONE : " + str(newPhoneId))
         return JsonResponse({'code': 1, 'id': newPhoneId}, status=status.HTTP_201_CREATED)
     return JsonResponse({'code': 0, 'error': 'API error'}, status=status.HTTP_400_BAD_REQUEST)
 

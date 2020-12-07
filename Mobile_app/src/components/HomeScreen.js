@@ -1,11 +1,11 @@
 import React from "react";
 import { useHistory } from "react-router-dom"
 import { StyleSheet, View, Text, Button } from "react-native";
-import PageTest from "./PageTest";
 import Authenticate from "./Authenticate";
+import * as SecureStore from 'expo-secure-store';
   
 const HomeScreen = () => {
-  
+    
     const history = useHistory()
 
     const handleGoScan = () => {
