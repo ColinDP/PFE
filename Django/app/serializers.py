@@ -12,8 +12,7 @@ class EstablishmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Establishment
         fields = ('user_id',
-                  'firstname',
-                  'lastname',
+                  'name',
                   'telephone',
                   'street_name',
                   'house_number',
@@ -51,16 +50,19 @@ class Qrcode_EstablishmentSerializer(serializers.ModelSerializer):
                   'establishment'
                     )
 
-class PhoneSerializer(serializers.ModelSerializer):
+class PhonesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phones
-        fields = ('phone_id'
-                    )
+        fields = (
+            'phone_id',
+            'sickness_date'
+        )
                     
-class ScanSerializer(serializers.ModelSerializer):
+class Entries_ScansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entries_Scans
-        fields = ('qrcode_id',
-                    'phone',
-                    'date_time'
-                    )
+        fields = (
+            'qrcode_id',
+            'phone',
+            'date_time'
+        )
