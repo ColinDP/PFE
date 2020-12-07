@@ -23,11 +23,11 @@ export default function Scan() {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
-  const sendMobileScan = ({ data }) => {
+  const sendMobileScan = async ({ data }) => {
     setScanned(true);
     var fields = {
       QRCodeContent: data,
-      phoneId: "1234",
+      phoneId: await(SecureStore.getItemAsync("device_id")),
       scanDate: Date.now()
     };
     DataService.sendMobileScan(fields)

@@ -58,10 +58,14 @@ def handle_app_launched(request):
 @api_view(['POST'])
 def insert_users_for_dev(request):
     try:
-        userA = User.objects.create_user('1', '1', '1')
-        userB = User.objects.create_user('2', '2', '2')
-        userC = User.objects.create_user('3', '3', '3')
-        doctorA = { 
+        docteur = User.objects.create_user('doc@gmail.com', 'doc@gmail.com', '12345678')
+        # docteur_id = User.objects.get(email = 'doc@gmail.com')
+        pierre = User.objects.create_user('p@gmail.com', 'p@gmail.com', '12345678')
+        laurent = User.objects.create_user('l@gmail.com', 'l@gmail.com', '12345678')
+        simon = User.objects.create_user('s@gmail.com', 's@gmail.com', '12345678')
+        marc = User.objects.create_user('m@gmail.com', 'm@gmail.com', '12345678')
+        colin = User.objects.create_user('c@gmail.com', 'c@gmail.com', '12345678')
+        doctor = { 
             'user_id' : 1,
             'firstname' : '1',
             'lastname' : '1',
@@ -72,7 +76,7 @@ def insert_users_for_dev(request):
             'inami' : '1',
             'mail' : '1'
         }
-        establishmentA = {
+        establishmentP = {
             'user_id' : 2,
             'name' : '2',
             'telephone' : '2',
@@ -82,7 +86,7 @@ def insert_users_for_dev(request):
             'tva' : '2',
             'mail' : '2'
         }
-        establishmentB = {
+        establishmentL = {
             'user_id' : 3,
             'name' : '3',
             'telephone' : '3',
@@ -92,16 +96,58 @@ def insert_users_for_dev(request):
             'tva' : '3',
             'mail' : '3'
         }
-        if userA is not None: 
-            doctor_serializer = DoctorSerializer(data = doctorA)
+        establishmentS = {
+            'user_id' : 4,
+            'name' : '4',
+            'telephone' : '4',
+            'street_name' : '4',
+            'house_number' : 4,
+            'postcode' : '4',
+            'tva' : '4',
+            'mail' : '4'
+        }
+        establishmentM = {
+            'user_id' : 5,
+            'name' : '5',
+            'telephone' : '5',
+            'street_name' : '5',
+            'house_number' : 5,
+            'postcode' : '5',
+            'tva' : '5',
+            'mail' : '5'
+        }
+        establishmentC = {
+            'user_id' : 6,
+            'name' : '6',
+            'telephone' : '6',
+            'street_name' : '6',
+            'house_number' : 6,
+            'postcode' : '6',
+            'tva' : '6',
+            'mail' : '6'
+        }
+        if doctor is not None: 
+            doctor_serializer = DoctorSerializer(data = doctor)
             if doctor_serializer.is_valid():
                 doctor_serializer.save()
-        if userB is not None: 
-            establishment_serializer = EstablishmentSerializer(data = establishmentA)
+        if establishmentP is not None: 
+            establishment_serializer = EstablishmentSerializer(data = establishmentP)
             if establishment_serializer.is_valid():
                 establishment_serializer.save()
-        if userC is not None: 
-            establishment_serializer = EstablishmentSerializer(data = establishmentB)
+        if establishmentL is not None: 
+            establishment_serializer = EstablishmentSerializer(data = establishmentL)
+            if establishment_serializer.is_valid():
+                establishment_serializer.save()
+        if establishmentS is not None: 
+            establishment_serializer = EstablishmentSerializer(data = establishmentS)
+            if establishment_serializer.is_valid():
+                establishment_serializer.save()
+        if establishmentM is not None: 
+            establishment_serializer = EstablishmentSerializer(data = establishmentM)
+            if establishment_serializer.is_valid():
+                establishment_serializer.save()
+        if establishmentC is not None: 
+            establishment_serializer = EstablishmentSerializer(data = establishmentC)
             if establishment_serializer.is_valid():
                 establishment_serializer.save()
     except Exception as e:
