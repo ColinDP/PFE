@@ -5,8 +5,8 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.contrib.auth.models import User
-from app.models import Connection, Doctor, Establishment
-from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer
+from app.models import Connection, Doctor, Establishment,Qrcode_Doctor, Qrcode_Establishment, Entries_Scans, Phones
+from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer,ScanSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -18,10 +18,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from cryptography.fernet import Fernet
-
-
 import uuid
-
 
 
 @api_view(['POST'])
@@ -29,10 +26,7 @@ def login_request(request):
     request_data = JSONParser().parse(request)
     username = request_data['email']
     password = request_data['password']
-    print(password, username)
-    print('hey')
     user = authenticate(request, username = username, password = password)
-    print(user)
     if user is not None:
         encrypted_id = encrypt(str(user.id))
         connection = {'user_id' : user.id, 'expire_date' : datetime.now()}
@@ -43,7 +37,6 @@ def login_request(request):
                 establishment = Establishment.objects.get(pk=user.id)
             except Establishment.DoesNotExist:
                 establishment = None
-                print('hey')
             if establishment is not None :
                 return JsonResponse({'response': 'User Connected', 'token' : encrypted_id, 'role' : 'E'}, status=status.HTTP_200_OK)
             doctor = Doctor.objects.get(pk=user.id)
@@ -57,8 +50,7 @@ def register_establishment(request):
     request_data = JSONParser().parse(request)
     user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
     establishment = {'user_id' : int(user.id),
-                     'firstname' : request_data['first_name'],
-                     'lastname' : request_data['last_name'],
+                     'name' : request_data['name'],
                      'telephone' : request_data['telephone'],
                      'street_name' : request_data['address_street'],
                      'house_number' : int(request_data['address_number']),
@@ -80,8 +72,6 @@ def register_doctor(request):
 
     request_data = JSONParser().parse(request)
     user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
-    print(user.id)
-
     doctor =  { 'user_id' : int(user.id),
                 'firstname' : request_data['first_name'],
                 'lastname' : request_data['last_name'],
@@ -94,7 +84,6 @@ def register_doctor(request):
             }
     
     doctor_serializer = DoctorSerializer(data = doctor)
-    print(doctor_serializer)
     if doctor_serializer.is_valid():
         doctor_serializer.save()
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
@@ -107,16 +96,13 @@ def get_qr_code(request):
     request_data = JSONParser().parse(request)
     token = request_data['token']
     user_id = int(decrypt(token))
-    print()
     connection = get_object_or_404(Connection, user_id = user_id)
-    if connection is not None :
-        print('working')
-    else :
+    if connection is None :
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
     
     # generates n qr_codes
     n_qr_codes = request_data['quantity']
-    role = request_date['role']
+    role = request_data['role']
     i = 0
     qr_codes_list = []
     while i < int(n_qr_codes):
@@ -155,26 +141,45 @@ def logout_request(request):
     Connection.objects.filter(user_id = user_id).delete()
     return JsonResponse({'response': 'User logged out'}, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def handle_scanned_request(request):
+    register_data = JSONParser().parse(request)
+    qr_code = register_data["QRCodeContent"]
+    phone_id = register_data["phoneId"]
+    scan_date = datetime.strptime(register_data["scanDate"], '%Y-%m-%d %H:%M:%S.%f')
+    qr_code_db = None
+    if(qr_code[0]=='1'):
+        # code médecin
+        qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
+        if qr_code_db is None :
+            return JsonResponse({'response': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        phone = Phones.objects.get(pk = phone_id)
+        phone.sickness_date = datetime.now()
+        phone.save()
+    else :
+        # code Etablissement
+        qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
+        if qr_code_db is None :
+            return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
+    scan_serializer = ScanSerializer(data = entry_scan)
+    if scan_serializer.is_valid() :
+        scan_serializer.save()
+        return JsonResponse({'message': 'scan handled'}, status=status.HTTP_201_CREATED)
+    return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
 def encrypt(txt):
-    try:
-        txt = str(txt)
-        cipher_suite = Fernet(settings.ENCRYPT_KEY)
-        encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
-        encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
-        return encrypted_text
-    except Exception as e:
-        print('error :', e.message)
-        return None
+    txt = str(txt)
+    cipher_suite = Fernet(settings.ENCRYPT_KEY)
+    encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
+    encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
+    return encrypted_text
 
 def decrypt(string):
-    try:
-        text = base64.urlsafe_b64decode(string)
-        cipher_suite = Fernet(settings.ENCRYPT_KEY)
-        decoded_text = cipher_suite.decrypt(text).decode("ascii")     
-        return decoded_text
-    except Exception as e:
-        print('error :', e.message)
-        return None
+    text = base64.urlsafe_b64decode(string)
+    cipher_suite = Fernet(settings.ENCRYPT_KEY)
+    decoded_text = cipher_suite.decrypt(text).decode("ascii")     
+    return decoded_text
 
 #Generate an unique id for the devices
 @api_view(['GET'])

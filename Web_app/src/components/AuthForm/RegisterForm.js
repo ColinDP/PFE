@@ -5,16 +5,11 @@ import { Card, Button, IconButton } from "react-native-paper";
 import DoctorForm from "components/AuthForm/DoctorForm";
 import EstablishmentForm from "components/AuthForm/EstablishmentForm";
 
-const RegisterForm = ({ setShowRegisterForm }) => {
+const RegisterForm = () => {
   const [account, setAccount] = useState("");
   return (
     <View>
-      {!account && (
-        <SelectAccountForm
-          setShowRegisterForm={setShowRegisterForm}
-          setAccount={setAccount}
-        />
-      )}
+      {!account && <SelectAccountForm setAccount={setAccount} />}
       {account === "Médecin" && <DoctorForm setAccount={setAccount} />}
       {account === "Établissement" && (
         <EstablishmentForm setAccount={setAccount} />

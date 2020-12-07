@@ -6,8 +6,10 @@ import AuthService from "services/authService";
 import CustomInput from "components/AuthForm/CustomInput";
 import { Button, Card, Title, IconButton } from "react-native-paper";
 import backIcon from "assets/svg/arrow-left.svg";
+import { useHistory } from "react-router";
 
 const DoctorForm = ({ setAccount }) => {
+  const history = useHistory();
   return (
     <Formik
       initialValues={{
@@ -23,7 +25,9 @@ const DoctorForm = ({ setAccount }) => {
       }}
       onSubmit={(data, actions) => {
         console.log(data);
-        AuthService.createDoctor(data).then((resp) => console.log(resp));
+        AuthService.createDoctor(data).then((resp) => {
+          history.push("/login");
+        });
       }}
     >
       {({ handleSubmit, isValid }) => (

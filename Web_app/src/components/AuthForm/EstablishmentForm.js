@@ -6,13 +6,14 @@ import AuthService from "services/authService";
 import CustomInput from "components/AuthForm/CustomInput";
 import { Button, Card, Title, IconButton } from "react-native-paper";
 import backIcon from "assets/svg/arrow-left.svg";
+import { useHistory } from "react-router-dom";
 
 const EstablishmentForm = ({ setAccount }) => {
+  const history = useHistory();
   return (
     <Formik
       initialValues={{
-        last_name: "",
-        first_name: "",
+        name: "",
         email: "",
         password: "",
         num_tva: "",
@@ -23,7 +24,9 @@ const EstablishmentForm = ({ setAccount }) => {
       }}
       onSubmit={(data, actions) => {
         console.log(data);
-        AuthService.createEstablishment(data).then((resp) => console.log(resp));
+        AuthService.createEstablishment(data).then((resp) => {
+          history.push("/login");
+        });
       }}
     >
       {({ handleSubmit, isValid }) => (
@@ -32,8 +35,7 @@ const EstablishmentForm = ({ setAccount }) => {
             <Title style={styles.title}>
               Créer un compte pour votre établissement
             </Title>
-            <Field component={CustomInput} name="last_name" label="Nom" />
-            <Field component={CustomInput} name="first_name" label="Prénom" />
+            <Field component={CustomInput} name="name" label="Nom" />
             <Field
               component={CustomInput}
               name="num_tva"

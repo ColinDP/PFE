@@ -9,10 +9,12 @@ import {
   IconButton,
 } from "react-native-paper";
 import backIcon from "assets/svg/arrow-left.svg";
+import { useHistory } from "react-router-dom";
 
-const SelectAccountForm = ({ setShowRegisterForm, setAccount }) => {
+const SelectAccountForm = ({ setAccount }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const history = useHistory();
 
   const handleSubmit = () => {
     if (value === "") {
@@ -24,6 +26,10 @@ const SelectAccountForm = ({ setShowRegisterForm, setAccount }) => {
   const handleRadioBtnChange = (newValue) => {
     setValue(newValue);
     setError("");
+  };
+
+  const handleRedirectToLogin = () => {
+    history.push("/login");
   };
   return (
     <Card style={styles.cardContainer}>
@@ -47,7 +53,7 @@ const SelectAccountForm = ({ setShowRegisterForm, setAccount }) => {
           <IconButton
             color="#808080"
             icon={backIcon}
-            onPress={() => setShowRegisterForm(false)}
+            onPress={handleRedirectToLogin}
           />
           <Button mode="contained" onPress={handleSubmit}>
             Suivant

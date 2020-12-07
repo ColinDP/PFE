@@ -12,8 +12,14 @@ const authenticateUser = (data) => {
   return http.post("/login", data).then((resp) => resp.data);
 };
 
-const logout = (data) => {
+const logout = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const data = { token: user.token };
   return http.post("/logout", data).then((resp) => resp.data);
+};
+
+const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem("user"));
 };
 
 export default {
@@ -21,4 +27,5 @@ export default {
   createDoctor,
   createEstablishment,
   logout,
+  getCurrentUser,
 };

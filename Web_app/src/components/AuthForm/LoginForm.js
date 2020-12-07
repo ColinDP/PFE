@@ -7,22 +7,20 @@ import CustomInput from "components/AuthForm/CustomInput";
 import { Button, Card, Title } from "react-native-paper";
 import mailIcon from "assets/svg/mail.svg";
 import passwordIcon from "assets/svg/lock.svg";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useRouteMatch,
-  useHistory,
-} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 const loginSchema = yup.object({
   email: yup.string(),
   password: yup.string(),
 });
 
-const LoginForm = ({ setShowRegisterForm }) => {
+const LoginForm = () => {
   const history = useHistory();
+
+  const handleRedirectToRegister = () => {
+    history.push("/register");
+  };
+
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
@@ -31,9 +29,14 @@ const LoginForm = ({ setShowRegisterForm }) => {
         // CALL API TO LOGIN USER
         AuthService.authenticateUser(data).then((resp) => {
           console.log(resp);
-          localStorage.setItem("token", resp.token);
+          if (resp.token) {
+            const user = {
+              token: resp.token,
+              role: resp.role,
+            };
+            localStorage.setItem("user", JSON.stringify(user));
+          }
           history.push("/home");
-          console.log(localStorage.getItem("token"));
         });
       }}
       validationSchema={loginSchema}
@@ -65,7 +68,7 @@ const LoginForm = ({ setShowRegisterForm }) => {
               secureTextEntry
             />
             <Card.Actions style={styles.buttons}>
-              <Button mode="flat" onPress={() => setShowRegisterForm(true)}>
+              <Button mode="flat" onPress={handleRedirectToRegister}>
                 Créer un compte
               </Button>
               <Button mode="contained" onPress={handleSubmit}>
