@@ -5,7 +5,7 @@ import Expositions from "./Expositions";
 
 
 const Authenticate = () => {
-  const [code, setCode] = useState()
+  const [resp, setResp] = useState()
 
   useEffect(() => {
       SecureStore.getItemAsync("device_id")
@@ -17,14 +17,14 @@ const Authenticate = () => {
               return DataService.getInfo(JSON.stringify(deviceId))
           })
           .then((response) => {
-              setCode({ code: 3 , expositions : 6 })
+            setResp(response)
           })
           .catch((e) => {
               console.log(e)
           })
   }, [])
 
-  return code ? <Expositions infections={code} /> : null
+  return resp ? <Expositions response={resp} /> : null
 }
 
 export default Authenticate

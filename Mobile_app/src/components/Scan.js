@@ -30,15 +30,16 @@ export default function Scan() {
       phoneId: await(SecureStore.getItemAsync("device_id")),
       scanDate: Date.now()
     };
-    DataService.sendMobileScan(fields)
-      .then(response => {
-        console.log(response.message);
-        alert(`Response : ${response.message}`);
-      })
-      .catch(e => {
-        console.log(e);
-        alert(`Error : ${e}`);
-      });
+    // DataService.sendMobileScan(fields)
+    //   .then(response => {
+    //     console.log(response.message);
+    //     alert(`Response : ${response.message}`);
+    //   })
+    //   .catch(e => {
+    //     console.log(e);
+    //     alert(`Error : ${e}`);
+    //   });
+    console.log(phoneId);
     history.push("/");
   }
 

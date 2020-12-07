@@ -142,30 +142,30 @@ def logout_request(request):
 
 @api_view(['POST'])
 def handle_scanned_request(request):
-    register_data = JSONParser().parse(request)
-    qr_code = register_data["QRCodeContent"]
-    phone_id = register_data["phoneId"]
-    scan_date = datetime.strptime(register_data["scanDate"], '%Y-%m-%d %H:%M:%S.%f')
-    qr_code_db = None
-    if(qr_code[0]=='1'):
-        # code médecin
-        qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
-        if qr_code_db is None :
-            return JsonResponse({'response': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        phone = Phones.objects.get(pk = phone_id)
-        phone.sickness_date = datetime.now()
-        phone.save()
-    else :
-        # code Etablissement
-        qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
-        if qr_code_db is None :
-            return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-    entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
-    scan_serializer = Entries_ScansSerializer(data = entry_scan)
-    if scan_serializer.is_valid() :
-        scan_serializer.save()
+    # register_data = JSONParser().parse(request)
+    # qr_code = register_data["QRCodeContent"]
+    # phone_id = register_data["phoneId"]
+    # scan_date = datetime.strptime(register_data["scanDate"], '%Y-%m-%d %H:%M:%S.%f')
+    # qr_code_db = None
+    # if(qr_code[0]=='1'):
+    #     # code médecin
+    #     qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
+    #     if qr_code_db is None :
+    #         return JsonResponse({'response': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    #     phone = Phones.objects.get(pk = phone_id)
+    #     phone.sickness_date = datetime.now()
+    #     phone.save()
+    # else :
+    #     # code Etablissement
+    #     qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
+    #     if qr_code_db is None :
+    #         return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    # entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
+    # scan_serializer = Entries_ScansSerializer(data = entry_scan)
+    # if scan_serializer.is_valid() :
+    #     scan_serializer.save()
         return JsonResponse({'message': 'Scan handled'}, status=status.HTTP_201_CREATED)
-    return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    # return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
 def encrypt(txt):
     txt = str(txt)
