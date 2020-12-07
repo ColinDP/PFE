@@ -23,12 +23,19 @@ const EstablishmentSchema = yup.object({
       'Invalid TVA number (must start with "BE" followed by 10 digits)'
     )
     .required("TVA is required"),
-  address_street: yup.string(),
-  address_number: yup.number(),
+  address_street: yup.string().required("Street name is required"),
+  address_number: yup
+    .number()
+    .typeError("Must be a number")
+    .required("N° is required"),
   address_postcode: yup
     .string()
-    .matches("^[1-9]{1}[0-9]{3}$", "Invalid postal code"),
-  telephone: yup.number(),
+    .matches("^[1-9]{1}[0-9]{3}$", "Invalid postal code")
+    .required("Postcode is required"),
+  telephone: yup
+    .number()
+    .typeError("Must be a number")
+    .required("Phone number is required"),
 });
 
 const EstablishmentForm = ({ setAccount }) => {
