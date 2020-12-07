@@ -13,13 +13,6 @@ import pytz
 
 utc=pytz.UTC
 
-@api_view(['POST'])
-def handle_scanned_request(request):
-    register_data = JSONParser().parse(request)
-    # ajout data DB
-    print(register_data["QRCodeContent"])
-    print(register_data["phoneID"])
-    return JsonResponse({'message': 'scan handled'}, status=status.HTTP_201_CREATED)
 
 # codes renvoyés : 0 error, 1 welcome, 2 vous etes safe, 3 vous etes danger
 @api_view(['POST'])

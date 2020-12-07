@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import Connection, Doctor, Establishment,Qrcode_Doctor, Qrcode_Establishment, Entries_Scans, Phones
-from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer,ScanSerializer
+from app.serializers import ConnectionSerializer, EstablishmentSerializer, DoctorSerializer, Qrcode_DoctorSerializer, Qrcode_EstablishmentSerializer,Entries_ScansSerializer
 from rest_framework.decorators import api_view
 from app import parser
 import pyqrcode
@@ -69,7 +69,6 @@ def register_establishment(request):
 
 @api_view(['POST'])
 def register_doctor(request):
-
     request_data = JSONParser().parse(request)
     user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
     doctor =  { 'user_id' : int(user.id),
@@ -162,10 +161,10 @@ def handle_scanned_request(request):
         if qr_code_db is None :
             return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
     entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
-    scan_serializer = ScanSerializer(data = entry_scan)
+    scan_serializer = Entries_ScansSerializer(data = entry_scan)
     if scan_serializer.is_valid() :
         scan_serializer.save()
-        return JsonResponse({'message': 'scan handled'}, status=status.HTTP_201_CREATED)
+        return JsonResponse({'message': 'Scan handled'}, status=status.HTTP_201_CREATED)
     return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
 def encrypt(txt):
