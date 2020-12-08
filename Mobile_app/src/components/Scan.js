@@ -4,6 +4,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import DataService from "../services/Services";
 // import { createBrowserHistory } from "history";
 import { useHistory } from "react-router-dom"
+import * as SecureStore from 'expo-secure-store';
 
 export default function Scan() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -18,22 +19,21 @@ export default function Scan() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const sendMobileScan = async ({ data }) => {
+    console.log(data)
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
-
-  const sendMobileScan = ({ data }) => {
-    setScanned(true);
+    var phone_Id = await(SecureStore.getItemAsync("device_id"))
     var fields = {
       QRCodeContent: data,
-      phoneId: "1234",
-      scanDate: Date.now()
+      phoneId: phone_Id
     };
     DataService.sendMobileScan(fields)
       .then(response => {
-        console.log(response.message);
-        alert(`Response : ${response.message}`);
+        if(response.code == 1){
+          alert(`Scan réussi`);
+        } else {
+          alert(`Un problème est survenu lors du scan, veuillez réessayer`);
+        }
       })
       .catch(e => {
         console.log(e);

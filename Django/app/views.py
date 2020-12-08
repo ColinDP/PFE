@@ -19,7 +19,9 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from cryptography.fernet import Fernet
 import uuid
+import pytz
 
+utc=pytz.UTC
 
 @api_view(['POST'])
 def login_request(request):
@@ -58,13 +60,12 @@ def register_establishment(request):
                      'tva' : request_data['num_tva'],
                      'mail' : request_data['email']
                     }
-    if user is not None: 
-        establishment_serializer = EstablishmentSerializer(data = establishment)
-        if establishment_serializer.is_valid():
-            establishment_serializer.save()
-            return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
-        else : 
-            return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    establishment_serializer = EstablishmentSerializer(data = establishment)
+    if establishment_serializer.is_valid():
+        establishment_serializer.save()
+        return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    else : 
+        return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
     return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -95,8 +96,9 @@ def get_qr_code(request):
     request_data = JSONParser().parse(request)
     token = request_data['token']
     user_id = int(decrypt(token))
-    connection = get_object_or_404(Connection, user_id = user_id)
-    if connection is None :
+    try:
+        connection = Connection.objects.filter(user_id = user_id)
+    except :
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
     
     # generates n qr_codes
@@ -110,7 +112,7 @@ def get_qr_code(request):
         if role == 'E':
             # Generates an establishement qr_code
             qr_code_id_role = '0' + str(qr_code_id)
-            qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id}
+            qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id, 'nb_scans' : 0}
             qr_code_serializer = Qrcode_EstablishmentSerializer(data = qr_code)
         else :
             # Generates a doctor qr_code
@@ -145,27 +147,61 @@ def handle_scanned_request(request):
     register_data = JSONParser().parse(request)
     qr_code = register_data["QRCodeContent"]
     phone_id = register_data["phoneId"]
-    scan_date = datetime.strptime(register_data["scanDate"], '%Y-%m-%d %H:%M:%S.%f')
+    scan_date = utc.localize(datetime.now())
     qr_code_db = None
     if(qr_code[0]=='1'):
         # code médecin
-        qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
-        if qr_code_db is None :
-            return JsonResponse({'response': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
+        except :
+            return JsonResponse({'code': 0, 'error': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        qr_code_db = Qrcode_Doctor.objects.get(pk = qr_code)
+        qr_code_db.used = True
+        qr_code_db.save()
         phone = Phones.objects.get(pk = phone_id)
-        phone.sickness_date = datetime.now()
+        phone.sickness_date = utc.localize(datetime.now())
         phone.save()
     else :
         # code Etablissement
-        qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
-        if qr_code_db is None :
-            return JsonResponse({'response': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
+        except:
+            return JsonResponse({'code': 0, 'error': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        qr_code_db.nb_scans = qr_code_db.nb_scans + 1
+        qr_code_db.save()
     entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
     scan_serializer = Entries_ScansSerializer(data = entry_scan)
     if scan_serializer.is_valid() :
         scan_serializer.save()
-        return JsonResponse({'message': 'Scan handled'}, status=status.HTTP_201_CREATED)
-    return JsonResponse({'response': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'code': 1}, status=status.HTTP_201_CREATED)
+    return JsonResponse({'code': 0, 'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+def get_qr_list(request):
+    request_data = JSONParser().parse(request)
+    token = request_data['token']
+    user_id = int(decrypt(token))
+    try:       
+        connection = Connection.objects.filter(user_id = user_id)
+    except:
+        return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+
+    qr_code_db_count = Qrcode_Establishment.objects.filter(establishment=user_id).count()
+    qr_codes_list = []
+    
+    for qr_code_db_img in Qrcode_Establishment.objects.filter(establishment=user_id).all():
+        #print(qr_code_db_img.qrcode_id)
+        qr = pyqrcode.create(str(qr_code_db_img.qrcode_id))
+        qr.png("testQR.png",scale=5)
+        data = decode(Image.open("testQR.png"))
+        encoded_string =''
+        with open("testQR.png", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+        qr_codes_list.append({'images': str(encoded_string),'count':qr_code_db_img.nb_scans})
+        
+    return JsonResponse({'data' : qr_codes_list}, status=status.HTTP_201_CREATED)
 
 def encrypt(txt):
     txt = str(txt)

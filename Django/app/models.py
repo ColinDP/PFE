@@ -11,6 +11,8 @@ class Qrcode_Establishment(models.Model):
         'Establishment',
         on_delete=models.CASCADE,
     )
+    nb_scans = models.IntegerField()
+
 
 class Qrcode_Doctor(models.Model):
     qrcode_id = models.CharField(max_length=100, blank=False, default='', primary_key = True)

@@ -6,6 +6,13 @@ const askForQR = (payload) => {
   return http.post("/get_code", data);
 };
 
+const listQR = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const data = { ...user };
+  return http.post("/get_list", data);
+}
+
 export default {
   askForQR,
+  listQR
 };

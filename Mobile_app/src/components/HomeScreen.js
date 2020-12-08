@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom"
-import { StyleSheet, View, Text, Button } from "react-native";
-import PageTest from "./PageTest";
+import { StyleSheet, View, Text, Image} from "react-native";
+import { Button } from 'react-native-paper';
 import Authenticate from "./Authenticate";
   
 const HomeScreen = () => {
@@ -15,7 +15,7 @@ const HomeScreen = () => {
     const styles = StyleSheet.create({
         homeContainer: {
             flex: 1,
-            backgroundColor: "#fff",
+            backgroundColor: "#EEEEEE",
             flexDirection: "column",
             justifyContent: "center",
         },
@@ -23,9 +23,11 @@ const HomeScreen = () => {
             flex: 1,
             flexDirection: "column",
             justifyContent: "center",
+            marginBottom:-90
         },
         button: {
-            
+            margin: 95,
+            padding: 8
         },
         infoContainer: {
             flex: 1,
@@ -33,33 +35,36 @@ const HomeScreen = () => {
             justifyContent: "center",
         },
         titleContainer: {
-            flex: 1,
+            padding: 55,
+            marginBottom: 10,
             flexDirection: "column",
             justifyContent: "center",
         },
         title1: {
+            marginLeft: -35,
             color: "purple",
-            textAlign: "center",
-            fontSize: 50,
+            textAlign: "left",
+            fontSize: 20,
             fontWeight: "bold"
         },
+        tinyLogo:{
+            width: 300,
+            height: 50,
+        }
     });
   
     return (
         <View style={styles.homeContainer}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title1}>Bienvenue</Text>
-            </View>
-            <View style={styles.infoContainer}>
+        <View style={styles.titleContainer}>
+            <Image style={styles.tinyLogo} source={{uri :'https://i.ibb.co/MV7vG8p/blockcovid-logo.png'}}></Image>
+        </View>
+        <View style={styles.infoContainer}>
                 <Authenticate />
-            </View>
+        </View>
             <View style={styles.buttonContainer}>
-                <Button
-                    style={styles.button}
-                    onPress={handleGoScan}
-                    title="Scanner un code QR"
-                    color="#841584"
-                />
+                <Button icon="camera" mode="contained" onPress={handleGoScan} style={styles.button} color="#6A137F">
+                    Scanner un code QR
+                </Button>
             </View>
         </View>
     );
