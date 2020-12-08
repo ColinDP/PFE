@@ -8,6 +8,7 @@ const CustomInput = (props) => {
     form: { errors, setErrors, touched, setFieldTouched },
     label,
     icon,
+    secureTextEntry,
     ...inputProps
   } = props;
 
@@ -16,6 +17,7 @@ const CustomInput = (props) => {
   return (
     <>
       <TextInput
+        secureTextEntry={secureTextEntry}
         error={hasError}
         left={
           icon ? (
