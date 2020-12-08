@@ -112,7 +112,7 @@ def get_qr_code(request):
         if role == 'E':
             # Generates an establishement qr_code
             qr_code_id_role = '0' + str(qr_code_id)
-            qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id}
+            qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id, 'nb_scans' : 0}
             qr_code_serializer = Qrcode_EstablishmentSerializer(data = qr_code)
         else :
             # Generates a doctor qr_code
@@ -166,12 +166,42 @@ def handle_scanned_request(request):
         qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
         if qr_code_db is None :
             return JsonResponse({'code': 0, 'error': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        print(qr_code_db.nb_scans)
+        qr_code_db.nb_scans = qr_code_db.nb_scans + 1
+        print(qr_code_db.nb_scans)
+        qr_code_db.save()
     entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
     scan_serializer = Entries_ScansSerializer(data = entry_scan)
     if scan_serializer.is_valid() :
         scan_serializer.save()
         return JsonResponse({'code': 1}, status=status.HTTP_201_CREATED)
     return JsonResponse({'code': 0, 'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+def get_qr_list(request):
+    request_data = JSONParser().parse(request)
+    token = request_data['token']
+    user_id = int(decrypt(token))
+    connection = get_object_or_404(Connection, user_id = user_id)
+    if connection is None :
+        return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+
+    qr_code_db_count = Qrcode_Establishment.objects.filter(establishment=user_id).count()
+    qr_codes_list = []
+    
+    for qr_code_db_img in Qrcode_Establishment.objects.filter(establishment=user_id).all():
+        #print(qr_code_db_img.qrcode_id)
+        qr = pyqrcode.create(str(qr_code_db_img.qrcode_id))
+        qr.png("testQR.png",scale=5)
+        data = decode(Image.open("testQR.png"))
+        encoded_string =''
+        with open("testQR.png", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+        qr_codes_list.append({'images': str(encoded_string),'count':qr_code_db_img.nb_scans})
+        
+    return JsonResponse({'data' : qr_codes_list}, status=status.HTTP_201_CREATED)
 
 def encrypt(txt):
     txt = str(txt)
