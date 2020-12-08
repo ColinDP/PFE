@@ -60,13 +60,12 @@ def register_establishment(request):
                      'tva' : request_data['num_tva'],
                      'mail' : request_data['email']
                     }
-    if user is not None: 
-        establishment_serializer = EstablishmentSerializer(data = establishment)
-        if establishment_serializer.is_valid():
-            establishment_serializer.save()
-            return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
-        else : 
-            return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    establishment_serializer = EstablishmentSerializer(data = establishment)
+    if establishment_serializer.is_valid():
+        establishment_serializer.save()
+        return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
+    else : 
+        return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
     return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -97,8 +96,9 @@ def get_qr_code(request):
     request_data = JSONParser().parse(request)
     token = request_data['token']
     user_id = int(decrypt(token))
-    connection = get_object_or_404(Connection, user_id = user_id)
-    if connection is None :
+    try:
+        connection = Connection.objects.filter(user_id = user_id)
+    except :
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
     
     # generates n qr_codes
@@ -146,14 +146,14 @@ def logout_request(request):
 def handle_scanned_request(request):
     register_data = JSONParser().parse(request)
     qr_code = register_data["QRCodeContent"]
-    print(qr_code)
     phone_id = register_data["phoneId"]
     scan_date = utc.localize(datetime.now())
     qr_code_db = None
     if(qr_code[0]=='1'):
         # code médecin
-        qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
-        if qr_code_db is None :
+        try:
+            qr_code_db = Qrcode_Doctor.objects.filter(pk = qr_code, used = False)
+        except :
             return JsonResponse({'code': 0, 'error': 'Doctor_Qr_code already used or does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         qr_code_db = Qrcode_Doctor.objects.get(pk = qr_code)
         qr_code_db.used = True
@@ -163,12 +163,11 @@ def handle_scanned_request(request):
         phone.save()
     else :
         # code Etablissement
-        qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
-        if qr_code_db is None :
+        try:
+            qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
+        except:
             return JsonResponse({'code': 0, 'error': 'Establishment_Qr_code does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        print(qr_code_db.nb_scans)
         qr_code_db.nb_scans = qr_code_db.nb_scans + 1
-        print(qr_code_db.nb_scans)
         qr_code_db.save()
     entry_scan = {'qrcode_id' : qr_code, 'phone' : phone_id, 'date_time' : scan_date}
     scan_serializer = Entries_ScansSerializer(data = entry_scan)
@@ -184,8 +183,9 @@ def get_qr_list(request):
     request_data = JSONParser().parse(request)
     token = request_data['token']
     user_id = int(decrypt(token))
-    connection = get_object_or_404(Connection, user_id = user_id)
-    if connection is None :
+    try:       
+        connection = Connection.objects.filter(user_id = user_id)
+    except:
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
     qr_code_db_count = Qrcode_Establishment.objects.filter(establishment=user_id).count()
