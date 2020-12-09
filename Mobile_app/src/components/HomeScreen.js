@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom"
 import { StyleSheet, View, Text, Image} from "react-native";
 import { Button } from 'react-native-paper';
+import { setStatusBarBackgroundColor, setStatusBarTranslucent, StatusBar } from 'expo-status-bar';
 import Authenticate from "./Authenticate";
   
 const HomeScreen = () => {
@@ -46,7 +47,7 @@ const HomeScreen = () => {
             flex: 0.7,
         }
     });
-  
+    setStatusBarBackgroundColor("#6A137F");
     return (
         <View style={styles.homeContainer}>
         <View style={styles.titleContainer}>
