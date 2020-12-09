@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import AuthService from "services/authService";
@@ -91,6 +91,8 @@ const styles = StyleSheet.create({
     borderColor: "#D3D3D3",
     borderWidth: "1px",
     borderRadius: "10px",
+    boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1)",
+    transition: "0.1s ease",
   },
   textInput: {
     height: 40,

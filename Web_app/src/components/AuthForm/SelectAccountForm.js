@@ -74,6 +74,8 @@ const styles = StyleSheet.create({
     borderColor: "#D3D3D3",
     borderWidth: "1px",
     borderRadius: "10px",
+    boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1)",
+    transition: "0.1s ease",
   },
   radioButtons: {
     marginBottom: "15px",

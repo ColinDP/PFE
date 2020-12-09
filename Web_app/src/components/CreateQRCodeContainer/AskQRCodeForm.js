@@ -13,7 +13,7 @@ const QRCodeSchema = yup.object({
 const AskQRCodeForm = ({ handleFormSubmit }) => {
   return (
     <Formik
-      initialValues={{ quantity: 1, names: ''}}
+      initialValues={{ quantity: 1, names: "" }}
       onSubmit={(data) => handleFormSubmit(data)}
       validationSchema={QRCodeSchema}
     >
@@ -22,17 +22,20 @@ const AskQRCodeForm = ({ handleFormSubmit }) => {
           <Title style={styles.title}>
             Combien de QR Code avez-vous besoin ?
           </Title>
-           <Field
+          <Field
             component={CustomInput}
             name="quantity"
             placeholder="1"
             type="number"
+            label="Nombre de QR Codes à générer"
             min="1"
             max="30"
           />
           <Field
+            component={CustomInput}
+            label="Ajouter un nom à vos QR Codes"
             name="names"
-            placeholder="table1, table2"
+            placeholder="ex: QRCode1, QRCode2, .."
           />
           <Card.Actions style={styles.button}>
             <Button mode="contained" onPress={handleSubmit}>

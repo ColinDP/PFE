@@ -46,7 +46,7 @@ const CustomInput = (props) => {
 const styles = StyleSheet.create({
   textInput: {
     margin: 7,
-    height: 40,
+    height: 35,
     backgroundColor: "white",
     flex: 1,
   },
