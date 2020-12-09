@@ -53,14 +53,19 @@ def handle_app_launched(request):
 def insert_users_for_dev(request):
     try:
         docteur = User.objects.create_user('doc@gmail.com', 'doc@gmail.com', '12345678')
-        # docteur_id = User.objects.get(email = 'doc@gmail.com')
+        docteur_id = User.objects.filter(email = 'doc@gmail.com').first().id
         pierre = User.objects.create_user('p@gmail.com', 'p@gmail.com', '12345678')
+        pierre_id = User.objects.filter(email = 'p@gmail.com').first().id
         laurent = User.objects.create_user('l@gmail.com', 'l@gmail.com', '12345678')
+        laurent_id = User.objects.filter(email = 'l@gmail.com').first().id
         simon = User.objects.create_user('s@gmail.com', 's@gmail.com', '12345678')
-        marc = User.objects.create_user('m@gmail.com', 'm@gmail.com', '12345678')
-        colin = User.objects.create_user('c@gmail.com', 'c@gmail.com', '12345678')
+        simon_id = User.objects.filter(email = 's@gmail.com').first().id
+        # marc = User.objects.create_user('m@gmail.com', 'm@gmail.com', '12345678')
+        # marc_id = User.objects.filter(email = 'm@gmail.com').first().id
+        # colin = User.objects.create_user('c@gmail.com', 'c@gmail.com', '12345678')
+        # colin_id = User.objects.filter(email = 'c@gmail.com').first().id
         doctor = { 
-            'user_id' : 1,
+            'user_id' : docteur_id,
             'firstname' : '1',
             'lastname' : '1',
             'telephone' : '1',
@@ -71,7 +76,7 @@ def insert_users_for_dev(request):
             'mail' : '1'
         }
         establishmentP = {
-            'user_id' : 2,
+            'user_id' : pierre_id,
             'name' : '2',
             'telephone' : '2',
             'street_name' : '2',
@@ -81,7 +86,7 @@ def insert_users_for_dev(request):
             'mail' : '2'
         }
         establishmentL = {
-            'user_id' : 3,
+            'user_id' : laurent_id,
             'name' : '3',
             'telephone' : '3',
             'street_name' : '3',
@@ -91,7 +96,7 @@ def insert_users_for_dev(request):
             'mail' : '3'
         }
         establishmentS = {
-            'user_id' : 4,
+            'user_id' : simon_id,
             'name' : '4',
             'telephone' : '4',
             'street_name' : '4',
@@ -99,26 +104,6 @@ def insert_users_for_dev(request):
             'postcode' : '4',
             'tva' : '4',
             'mail' : '4'
-        }
-        establishmentM = {
-            'user_id' : 5,
-            'name' : '5',
-            'telephone' : '5',
-            'street_name' : '5',
-            'house_number' : 5,
-            'postcode' : '5',
-            'tva' : '5',
-            'mail' : '5'
-        }
-        establishmentC = {
-            'user_id' : 6,
-            'name' : '6',
-            'telephone' : '6',
-            'street_name' : '6',
-            'house_number' : 6,
-            'postcode' : '6',
-            'tva' : '6',
-            'mail' : '6'
         }
         if doctor is not None: 
             doctor_serializer = DoctorSerializer(data = doctor)

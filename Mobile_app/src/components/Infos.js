@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import { DefaultTheme, Provider, Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faVirus, faHistory, faUserSecret, faQrcode } from '@fortawesome/free-solid-svg-icons'
+import { faVirus, faHistory, faUserSecret, faQrcode, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 let currentdate = new Date(); 
 let datetime = currentdate.getDate() + "-"
@@ -18,42 +18,38 @@ const Infos = ({response}) => {
       switch(response.code){
         case 0:
           return <>
-            <Card.Title title="Erreur"/>
-              <Card.Content>
-                <Paragraph>Un problème est survenu</Paragraph>
+            <Card elevation={10} style={styles.cardNoSignal}>
+              <Card.Title titleStyle={styles.textTitleNoSignal} title="Erreur"/>
+              <Card.Content style={styles.content} >
+                <FontAwesomeIcon icon={ faExclamationTriangle } color={'#d9534f'} size={15}/>
+                <Paragraph style={styles.textNoSignal}>Une erreur s'est produite, veuillez réessayer plus tard</Paragraph>
               </Card.Content>
+            </Card>
           </>;
         case 1:
           return <>
-          <Card elevation={10} style={styles.cardNoSignal}>
-          <Card.Title titleStyle={styles.textTitleNoSignal} title="Appareil enregistré"/>
-            <Card.Content style={styles.content} >
-              <FontAwesomeIcon icon={ faQrcode } color={'black'} size={15}/>
-              <Paragraph style={styles.textNoSignal}>Commençez par scanner des codes QR</Paragraph>
-            </Card.Content>
-            </Card>
-          </>;
+            <Card elevation={10} style={styles.cardNoSignal}>
+            <Card.Title titleStyle={styles.textTitleNoSignal} title="Appareil enregistré"/>
+              <Card.Content style={styles.content} >
+                <FontAwesomeIcon icon={ faQrcode } color={'black'} size={15}/>
+                <Paragraph style={styles.textNoSignal}>Scanner des codes QR pour que nous puissions assurer votre suivi</Paragraph>
+              </Card.Content>
+              </Card>
+            </>;
         case 2:
           return <>
-          {/* <Card elevation={10} style={styles.cardGreen}>
-          <Card.Title titleStyle={styles.textTitle} title="Vous n'avez pas été exposé"/>
-            <Card.Content style={styles.content} >
-              <FontAwesomeIcon icon={ faVirus } color={'white'} size={15}/>
-              <Paragraph style={styles.text}>Aucune exposition détectée lors des 10 derniers jours</Paragraph>
-            </Card.Content>
-            <Card.Content style={styles.content}>
-              <FontAwesomeIcon icon={ faHistory } color={'white'} size={15}/>
-              <Paragraph style={styles.text}>Mise à jour : {datetime}</Paragraph>
-            </Card.Content>
-            </Card> */}
-            <Card elevation={10} style={styles.cardNoSignal}>
-          <Card.Title titleStyle={styles.textTitleNoSignal} title="Appareil enregistré"/>
-            <Card.Content style={styles.content} >
-              <FontAwesomeIcon icon={ faQrcode } color={'black'} size={15}/>
-              <Paragraph style={styles.textNoSignal}>Scanner des codes QR pour que nous puissions assurer votre suivi</Paragraph>
-            </Card.Content>
-            </Card>
-          </>;
+            <Card elevation={10} style={styles.cardGreen}>
+            <Card.Title titleStyle={styles.textTitle} title="Vous n'avez pas été exposé"/>
+              <Card.Content style={styles.content} >
+                <FontAwesomeIcon icon={ faVirus } color={'white'} size={15}/>
+                <Paragraph style={styles.text}>Aucune exposition détectée lors des 10 derniers jours</Paragraph>
+              </Card.Content>
+              <Card.Content style={styles.content}>
+                <FontAwesomeIcon icon={ faHistory } color={'white'} size={15}/>
+                <Paragraph style={styles.text}>Mise à jour : {datetime}</Paragraph>
+              </Card.Content>
+              </Card>
+            </>;
         case 3:
           return <>
             <Card elevation={10} style={styles.cardRed}>
@@ -68,6 +64,16 @@ const Infos = ({response}) => {
               </Card.Content>
               </Card>
             </>;
+        default:
+          return <>
+            <Card elevation={10} style={styles.cardNoSignal}>
+              <Card.Title titleStyle={styles.textTitleNoSignal} title="Erreur"/>
+              <Card.Content style={styles.content} >
+                <FontAwesomeIcon icon={ faExclamationTriangle } color={'#d9534f'} size={15}/>
+                <Paragraph style={styles.textNoSignal}>Une erreur s'est produite, veuillez réessayer plus tard</Paragraph>
+              </Card.Content>
+            </Card>
+          </>;
       }
     }
     const styles = StyleSheet.create({
