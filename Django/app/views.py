@@ -105,8 +105,8 @@ def get_qr_code(request):
     n_qr_codes = request_data['quantity']
     role = request_data['role']
     names = request_data['names']
+    cname = ""
     names_split = names.split(',')
-    print(names=="")
     if (names !="") &(len(names_split) != int(n_qr_codes)) :
         return JsonResponse({'response': 'If you want to enter names, you need to enter one for each qr code'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -118,13 +118,14 @@ def get_qr_code(request):
         if role == 'E':
             # Generates an establishement qr_code
             qr_code_id_role = '0' + str(qr_code_id)
+            
             if names != "":
+                cname = names_split[i]
                 qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id, 'nb_scans' : 0, 'name' : names_split[i]}
             else :
                 name = 'Code QR' + str(i+1)
-                names = names + name + ','
+                cname =  name 
                 qr_code = {'qrcode_id' : qr_code_id_role, 'establishment' : user_id, 'nb_scans' : 0, 'name' : name}
-                print(qr_code)
             qr_code_serializer = Qrcode_EstablishmentSerializer(data = qr_code)
         else :
             # Generates a doctor qr_code
@@ -142,9 +143,9 @@ def get_qr_code(request):
         encoded_string =''
         with open("testQR.svg", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
-        qr_codes_list.append(str(encoded_string))
+        qr_codes_list.append({'image': str(encoded_string), 'name': cname})
         i = i+1
-    return JsonResponse({'images': qr_codes_list, 'names': names}, status=status.HTTP_201_CREATED)
+    return JsonResponse({"data":qr_codes_list}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def logout_request(request):
@@ -201,6 +202,7 @@ def get_qr_list(request):
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
     qr_code_db_count = Qrcode_Establishment.objects.filter(establishment=user_id).count()
+    print(qr_code_db_count)
     qr_codes_list = []
     
     for qr_code_db_img in Qrcode_Establishment.objects.filter(establishment=user_id).all():
