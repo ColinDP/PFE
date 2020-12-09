@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import { DefaultTheme, Provider, Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faVirus, faHistory, faUserSecret} from '@fortawesome/free-solid-svg-icons'
+import { faVirus, faHistory, faUserSecret, faQrcode } from '@fortawesome/free-solid-svg-icons'
 
 let currentdate = new Date(); 
 let datetime = currentdate.getDate() + "-"
@@ -26,16 +26,16 @@ const Infos = ({response}) => {
         case 1:
           return <>
           <Card elevation={10} style={styles.cardNoSignal}>
-          <Card.Title titleStyle={styles.textTitleNoSignal} title="Votre téléphone a été enregistré"/>
+          <Card.Title titleStyle={styles.textTitleNoSignal} title="Appareil enregistré"/>
             <Card.Content style={styles.content} >
-              <FontAwesomeIcon icon={ faUserSecret } color={'black'} size={15}/>
+              <FontAwesomeIcon icon={ faQrcode } color={'black'} size={15}/>
               <Paragraph style={styles.textNoSignal}>Commençez par scanner des codes QR</Paragraph>
             </Card.Content>
             </Card>
           </>;
         case 2:
           return <>
-          <Card elevation={10} style={styles.cardGreen}>
+          {/* <Card elevation={10} style={styles.cardGreen}>
           <Card.Title titleStyle={styles.textTitle} title="Vous n'avez pas été exposé"/>
             <Card.Content style={styles.content} >
               <FontAwesomeIcon icon={ faVirus } color={'white'} size={15}/>
@@ -44,6 +44,13 @@ const Infos = ({response}) => {
             <Card.Content style={styles.content}>
               <FontAwesomeIcon icon={ faHistory } color={'white'} size={15}/>
               <Paragraph style={styles.text}>Mise à jour : {datetime}</Paragraph>
+            </Card.Content>
+            </Card> */}
+            <Card elevation={10} style={styles.cardNoSignal}>
+          <Card.Title titleStyle={styles.textTitleNoSignal} title="Appareil enregistré"/>
+            <Card.Content style={styles.content} >
+              <FontAwesomeIcon icon={ faQrcode } color={'black'} size={15}/>
+              <Paragraph style={styles.textNoSignal}>Scanner des codes QR pour que nous puissions assurer votre suivi</Paragraph>
             </Card.Content>
             </Card>
           </>;
@@ -90,30 +97,34 @@ const Infos = ({response}) => {
       },
       textNoSignal :{
         color : '#000000',
-        textAlign: "left",
+        marginLeft: "8%",
+        fontSize : 16
+      },
+      textWelcome :{
+        color : '#000000',
         fontSize : 16
       },
       cardNoSignal: {
         flex: 1,
-        marginBottom: "4%",
+        marginTop: "4%",
         width: "90%",
-        padding: "2%",
+        padding: "3%",
         alignContent: "center",
         backgroundColor: '#FFFFFF'
       },
       cardGreen: {
         flex: 1,
-        marginBottom: "4%",
+        marginTop: "4%",
         width: "90%",
-        padding: "2%",
+        padding: "3%",
         alignContent: "center",
         backgroundColor: '#4C9D55'
       },
       cardRed: {
         flex: 1,
-        marginBottom: "4%",
+        marginTop: "4%",
         width: "90%",
-        padding: "2%",
+        padding: "3%",
         alignContent: "center",
         backgroundColor: '#d9534f'
       },
@@ -129,13 +140,13 @@ const Infos = ({response}) => {
     });
       return (
         <View style={styles.cardContainer}>
-          <Card elevation={50} style={styles.cardNoSignal}>
+          <Card elevation={10} style={styles.cardNoSignal}>
             <Card.Title titleStyle={styles.textTitleNoSignal} title="Bienvenue"/>
               <Card.Content style={styles.content} >
-                <Paragraph style={styles.textNoSignal}>Merci d'avoir téléchargé l'app !</Paragraph>
+                <Paragraph style={styles.textWelcome}>Merci d'avoir téléchargé l'app !</Paragraph>
               </Card.Content>
               <Card.Content style={styles.content} >
-                <Paragraph style={styles.textNoSignal}>Vous êtes à présent acteur de la lutte contre l'épidemie.</Paragraph>
+                <Paragraph style={styles.textWelcome}>Vous êtes à présent acteur de la lutte contre l'épidemie.</Paragraph>
               </Card.Content>
           </Card>
           {renderSwitch(response)}

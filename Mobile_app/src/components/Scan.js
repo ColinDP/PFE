@@ -37,16 +37,17 @@ export default function Scan() {
       })
       .catch(e => {
         console.log(e);
-        alert(`Error : ${e}`);
+        // alert(`Error : ${e}`);
+        alert(`Un problème est survenu lors du scan, veuillez réessayer`);
       });
     history.push("/");
   }
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text>Demande d'autorisation pour utiliser la camera</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>Pas d'accès à la camera</Text>;
   }
 
   return (
@@ -61,7 +62,7 @@ export default function Scan() {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {<Button color="#6A137F" title={'Retour'} onPress={() => history.push("/")} />}
     </View>
   );
 }

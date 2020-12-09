@@ -23,11 +23,13 @@ const HomeScreen = () => {
             flex: 0.3,
             flexDirection: "column",
             justifyContent: "center",
-            backgroundColor: "grey",
             alignItems: "center"
         },
         button: {
-            width: "60%"
+            width: "65%",
+            height: "50%",
+            textAlign: "center",
+            justifyContent: "center",
         },
         infoContainer: {
             flex: 1,
@@ -38,10 +40,10 @@ const HomeScreen = () => {
             flex: 0.3,
             flexDirection: "column",
             justifyContent: "center",
-            backgroundColor: "grey",
         },
         tinyLogo:{
-            flex: 0.6,
+            marginTop: "8%",
+            flex: 0.7,
         }
     });
   
