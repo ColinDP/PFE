@@ -20,14 +20,14 @@ const HomeScreen = () => {
             justifyContent: "center",
         },
         buttonContainer: {
-            flex: 1,
+            flex: 0.3,
             flexDirection: "column",
             justifyContent: "center",
-            marginBottom:-90
+            backgroundColor: "grey",
+            alignItems: "center"
         },
         button: {
-            margin: 95,
-            padding: 8
+            width: "60%"
         },
         infoContainer: {
             flex: 1,
@@ -35,21 +35,13 @@ const HomeScreen = () => {
             justifyContent: "center",
         },
         titleContainer: {
-            padding: 55,
-            marginBottom: 10,
+            flex: 0.3,
             flexDirection: "column",
             justifyContent: "center",
-        },
-        title1: {
-            marginLeft: -35,
-            color: "purple",
-            textAlign: "left",
-            fontSize: 20,
-            fontWeight: "bold"
+            backgroundColor: "grey",
         },
         tinyLogo:{
-            width: 300,
-            height: 50,
+            flex: 0.6,
         }
     });
   
