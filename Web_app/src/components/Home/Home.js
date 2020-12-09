@@ -11,21 +11,21 @@ const Home = () => {
 
   const [datas,setDatas] = useState([]);
   const [display,setDisplay] = useState(false);
-  const [count,setCount] = useState(0);
+
   
   const isEntreprise = JSON.parse(localStorage.getItem("user")).role=="E";
 
   const handleList = () =>{
     setDisplay(true);
-    setCount(count+1)
     Service.listQR()
       .then((resp) => {    
         var array = []
         for (var i = 0; i < resp.data.data.length; i++) {
-          const images = resp.data.data[i].images;
+          const image = resp.data.data[i].image;
           const count = resp.data.data[i].count;
+          const name = resp.data.data[i].name;
           array.push({
-            image:"data:image/png;base64," + images.substring(2, images.length - 1), count:count
+            image:"data:image/png;base64," + image.substring(2, image.length - 1), count:count, name:name
           });
           
         }
@@ -41,7 +41,9 @@ const Home = () => {
   return (
     <>
       <LogoutButton />
-      <CreateQRCodeContainer />
+
+      <CreateQRCodeContainer setDisplay={setDisplay}/>
+      {console.log(datas)}
       {!display ? handleList() : isEntreprise  ? <ListQRCodes data={datas}/> : console.log("ok")}
       
     </>

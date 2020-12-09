@@ -14,11 +14,11 @@ const PDFDocument = ({ data }) => {
       {data.map((image, index) => (
         <Page key={index} style={styles.page} size="A4">
           <View style={styles.section}>
-            <Text>Scan me to save lives!!</Text>
-            <Image style={styles.image} source={image} />
-            <Text>
-              {("page "+(index + 1)+ "/" +data.length)}
-            </Text>
+            
+            <Text style={styles.text}>Scan me to save lives!!</Text>
+            <Image style={styles.image} source={image.image} />
+            <Text>{image.name}</Text>
+            <Text style={styles.footer}>{`${index + 1} / ${data.length}`}</Text>
           </View>
         </Page>
       ))}
@@ -31,6 +31,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     textAlign: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  text:{
+    paddingTop: "250px",
   },
   image: {
     display: "block",
@@ -51,7 +56,8 @@ const styles = StyleSheet.create({
     scale: 0.5,
   },
   footer: {
-    height: 100,
+    position: "absolute",
+    bottom: 0,
   },
 });
 

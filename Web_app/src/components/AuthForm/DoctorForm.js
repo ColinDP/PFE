@@ -98,10 +98,9 @@ const DoctorForm = ({ setAccount }) => {
             <Field component={CustomInput} name="email" label="Email" />
             <Field
               component={CustomInput}
-              type="password"
               name="password"
               label="Password"
-              secureTextEntry
+              secureTextEntry={true}
             />
             <Card.Actions style={styles.buttons}>
               <IconButton

@@ -19,7 +19,8 @@ const ListQRCodes = ({data}) => {
         for(var i=0;i<data.length;i++){
           const temp = (
               <DataTable.Row key={i}>
-                  <DataTable.Cell><Image style={styles.image} source={data[i].image} /></DataTable.Cell>
+                  <DataTable.Cell>{data[i].name}</DataTable.Cell>
+                  <DataTable.Cell ><Image style={styles.image} source={data[i].image} /></DataTable.Cell>
                   <DataTable.Cell numeric>{data[i].count}</DataTable.Cell>
               </DataTable.Row>
               )
@@ -28,13 +29,16 @@ const ListQRCodes = ({data}) => {
         }
         setLoad(false);
         setCodes(array);
-    } 
+    }else if (data.length == 0){
+      return(<Text style={styles.text}>You have no QR Codes for now</Text>)
+    }
     return (
-        <Card.Content>
+        <Card.Content >
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>QR Code</DataTable.Title>
-              <DataTable.Title numeric>nbr of scans</DataTable.Title>
+              <DataTable.Title style={styles.statistics}>Name</DataTable.Title>
+              <DataTable.Title style={styles.statistics}>QR Code</DataTable.Title>
+              <DataTable.Title style={styles.statistics} numeric>total scans</DataTable.Title>
             </DataTable.Header>
 
           {codes[currentPage]}     
@@ -70,9 +74,18 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: "auto",
         padding: 40,
-        backgroundColor: "red",
-        objectFit: "cover",
-      }
+        backgroundColor: "white",
+        objectFit: "center",
+      },
+    statistics : {
+      paddingLeft: 25,
+      paddingRight: 25,
+      objectFit: "cover",
+    },
+    text:{
+      paddingTop:20,
+      color:"red",
+    },
   });
   
   export default ListQRCodes;

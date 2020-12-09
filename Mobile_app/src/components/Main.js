@@ -2,6 +2,7 @@ import React from "react";
 import Scan from "./Scan";
 import HomeScreen from "./HomeScreen";
 import { Route, Switch } from 'react-router-native';
+import Register from "./Register";
 
 function Main() {
   return (

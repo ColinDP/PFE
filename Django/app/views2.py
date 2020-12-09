@@ -36,7 +36,7 @@ def handle_app_launched(request):
                 return JsonResponse({'code': 3, 'expositions': expositions_count}, status=status.HTTP_201_CREATED)
             return JsonResponse({'code': 2}, status=status.HTTP_201_CREATED)
         except Phones.DoesNotExist:
-            return JsonResponse({'code': 0, 'error': 'DB operation error'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'code': 0, 'error': 'DB operation error'}, status=status.HTTP_201_CREATED)
     newPhoneId = str(uuid.uuid4())
     newPhone = {'phone_id': newPhoneId, 'sickness_date': utc.localize(datetime.min)}
     phone_serializer = PhonesSerializer(data = newPhone)
@@ -44,10 +44,10 @@ def handle_app_launched(request):
         try:
             phone_serializer.save()
         except Exception as e:
-            return JsonResponse({'code': 0, 'error': 'Phone couldnt be added in DB'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'code': 0, 'error': 'Phone couldnt be added in DB'}, status=status.HTTP_201_CREATED)
         print("NEW PHONE : " + str(newPhoneId))
         return JsonResponse({'code': 1, 'id': newPhoneId}, status=status.HTTP_201_CREATED)
-    return JsonResponse({'code': 0, 'error': 'API error'}, status=status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({'code': 0, 'error': 'API error'}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def insert_users_for_dev(request):

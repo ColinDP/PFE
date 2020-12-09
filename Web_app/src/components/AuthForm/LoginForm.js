@@ -52,13 +52,6 @@ const LoginForm = () => {
         {({ handleSubmit, isValid }) => (
           <Card style={styles.loginContainer}>
             <Card.Content>
-              {/*          <TextInput
-            mode="outlined"
-            style={styles.textInput}
-            theme={{
-              colors: { primary: "green", underlineColor: "transparent" },
-            }}
-          /> */}
               <Title style={styles.title}>Connectez vous</Title>
               <Field
                 icon={mailIcon}
@@ -69,10 +62,9 @@ const LoginForm = () => {
               <Field
                 icon={passwordIcon}
                 component={CustomInput}
-                type="password"
                 name="password"
                 label="Password"
-                secureTextEntry
+                secureTextEntry={true}
               />
               <Card.Actions style={styles.buttons}>
                 <Button mode="flat" onPress={handleRedirectToRegister}>
