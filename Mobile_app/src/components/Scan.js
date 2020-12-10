@@ -5,6 +5,7 @@ import DataService from "../services/Services";
 // import { createBrowserHistory } from "history";
 import { useHistory } from "react-router-dom"
 import * as SecureStore from 'expo-secure-store';
+import { showMessage, FlashMessage } from "react-native-flash-message";
 
 export default function Scan() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -29,16 +30,39 @@ export default function Scan() {
     };
     DataService.sendMobileScan(fields)
       .then(response => {
-        if(response.code == 1){
-          alert(`Scan réussi`);
-        } else {
-          alert(`Un problème est survenu lors du scan, veuillez réessayer`);
+        switch (response.code){
+          case 0:
+            showMessage({
+              message: "Echec du scan",
+              description: "Ce code n'est pas valide",
+              icon: "warning",
+              type: "warning",
+            });
+            break;
+          case 1:
+            showMessage({
+              message: "Echec du scan",
+              description: "Ce code a déjà été scanné",
+              icon: "warning",
+              type: "warning",
+            });
+          break;
+        case 2:
+            showMessage({
+              message: "Scan effectué",
+              icon: "success",
+              type: "success",
+            });
+        break;
         }
-      })
-      .catch(e => {
+      }).catch(e => {
         console.log(e);
-        // alert(`Error : ${e}`);
-        alert(`Un problème est survenu lors du scan, veuillez réessayer`);
+        showMessage({
+          message: "Echec du scan",
+          description: "Ce code n'est pas valide",
+          icon: "warning",
+          type: "warning",
+        });
       });
     history.push("/");
   }

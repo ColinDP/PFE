@@ -8,7 +8,7 @@ const Authenticate = () => {
 
   useEffect(() => {
 
-      //SecureStore.deleteItemAsync("device_id")
+      // SecureStore.deleteItemAsync("device_id")
       // SecureStore.setItemAsync("device_id", "Simon-fab9a071-66e7-4856-8789-7b2375980c15")
 
       SecureStore.getItemAsync("device_id")
