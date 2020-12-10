@@ -52,7 +52,10 @@ def login_request(request):
 @api_view(['POST'])
 def register_establishment(request):
     request_data = JSONParser().parse(request)
-    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    try:
+        user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    except : 
+        return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
     establishment = {'user_id' : int(user.id),
                      'name' : request_data['name'],
                      'telephone' : request_data['telephone'],
@@ -68,12 +71,14 @@ def register_establishment(request):
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
     else : 
         return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST) 
-    return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 def register_doctor(request):
     request_data = JSONParser().parse(request)
-    user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    try:
+        user = User.objects.create_user(request_data['email'], request_data['email'], request_data['password'])
+    except:
+        return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)     
     doctor =  { 'user_id' : int(user.id),
                 'firstname' : request_data['first_name'],
                 'lastname' : request_data['last_name'],
@@ -91,7 +96,6 @@ def register_doctor(request):
         return JsonResponse({'response': 'User Created'}, status=status.HTTP_201_CREATED) 
     else : 
         return JsonResponse({'response': 'Email already used'}, status=status.HTTP_400_BAD_REQUEST)
-    return JsonResponse({'response': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 
 @api_view(['POST'])
 def get_qr_code(request):

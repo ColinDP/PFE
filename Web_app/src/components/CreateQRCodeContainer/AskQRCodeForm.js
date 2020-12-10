@@ -43,7 +43,7 @@ const AskQRCodeForm = ({ handleFormSubmit }) => {
           )}
           <Card.Actions style={styles.button}>
             <Button mode="contained" onPress={handleSubmit}>
-              Ask QR Code Now
+              Générer CODE QR
             </Button>
           </Card.Actions>
         </>

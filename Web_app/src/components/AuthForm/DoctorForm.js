@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text} from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import AuthService from "services/authService";
@@ -59,7 +59,7 @@ const DoctorForm = ({ setAccount }) => {
             history.push("/login");
           })
           .catch((error) => {
-            setError(error.response.data.error);
+            setError(error.response.data.response);
           });
       }}
       validationSchema={DoctorSchema}

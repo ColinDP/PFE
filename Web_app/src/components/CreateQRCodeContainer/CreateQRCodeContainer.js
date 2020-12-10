@@ -58,7 +58,7 @@ const CreateQRCodeContainer = ({ setQRList, QRList, handleList }) => {
               fileName="SaveLives.pdf"
             >
               {({ blob, url, loading, error }) =>
-                loading ? "Loading document..." : "Download Pdf"
+                loading ? "Chargement du document..." : "Télécharger Pdf"
               }
             </PDFDownloadLink>
           </Button>

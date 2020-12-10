@@ -18,7 +18,7 @@ const LogoutButton = ({ style }) => {
 
   return (
     <Button style={styles.logout} mode="contained" onPress={handlePress}>
-      Logout
+      Déconnexion
     </Button>
   );
 };
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     borderRadius: "30px",
     padding: "5px",
-    width: "120px",
+    width: "200px",
   },
 });
 export default LogoutButton;

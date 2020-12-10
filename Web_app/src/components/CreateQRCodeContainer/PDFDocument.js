@@ -9,14 +9,14 @@ import {
 } from "@react-pdf/renderer";
 
 const PDFDocument = ({ data }) => {
+  console.log(data)
   return (
     <Document>
       {data.map((item, index) => (
         <Page key={index} style={styles.page} size="A4">
           <View style={styles.section}>
-            <Text style={styles.text}>Scan me to save lives!!</Text>
+            <Text>Scan me to save lives!!</Text>
             <Image style={styles.image} source={item.image} />
-            <Text>{item.name}</Text>
             <Text style={styles.footer}>{`${index + 1} / ${data.length}`}</Text>
           </View>
         </Page>
