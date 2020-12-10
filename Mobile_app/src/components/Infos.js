@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import { DefaultTheme, Provider, Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import { StyleSheet, View} from "react-native";
+import { Card, Paragraph, ActivityIndicator} from 'react-native-paper';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faVirus, faHistory, faUserSecret, faQrcode, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faVirus, faHistory, faQrcode, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 let currentdate = new Date(); 
 let datetime = currentdate.getDate() + "-"
@@ -15,17 +15,26 @@ const Infos = ({response}) => {
     console.log(response);
 
     function renderSwitch(response){
+      let changeStatus = false;
       switch(response.code){
         case 0:
-          return <>
-            <Card elevation={10} style={styles.cardNoSignal}>
+          return<>
+            <View style={styles.cardLoading}>
+              <ActivityIndicator animating={true} size={35} color={"#6A137F"} />
+            </View>
+            {/*setTimeout(() => {
+             <>
+              <Card elevation={10} style={styles.cardNoSignal}>
               <Card.Title titleStyle={styles.textTitleNoSignal} title="Erreur"/>
               <Card.Content style={styles.content} >
                 <FontAwesomeIcon icon={ faExclamationTriangle } color={'#d9534f'} size={15}/>
                 <Paragraph style={styles.textNoSignal}>Une erreur s'est produite, veuillez réessayer plus tard</Paragraph>
               </Card.Content>
-            </Card>
-          </>;
+              </Card>
+              </>
+            }, 5000)
+          */}
+            </>
         case 1:
           return <>
             <Card elevation={10} style={styles.cardNoSignal}>
@@ -117,6 +126,14 @@ const Infos = ({response}) => {
         padding: "3%",
         alignContent: "center",
         backgroundColor: '#FFFFFF'
+      },
+      cardLoading: {
+        flex: 1,
+        marginTop: "4%",
+        width: "90%",
+        padding: "3%",
+        alignContent: "center",
+        justifyContent: 'center',
       },
       cardGreen: {
         flex: 1,
