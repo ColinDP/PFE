@@ -169,13 +169,10 @@ def handle_scanned_request(request):
     scan_date = utc.localize(datetime.now())
     qr_code_db = None
     if(qr_code[0]=='1'):
-        print("doc")
         qr_code_db = Qrcode_Doctor.objects.get(pk = qr_code)
         if qr_code_db is None:
-            print("is none")
             return JsonResponse({'code': 0, 'error': 'Qr_code does not exist'}, status=200)
         if qr_code_db.used == True:
-            print("is used")
             return JsonResponse({'code': 1, 'error': 'Qr_code already scanned'}, status=200)
         qr_code_db.used = True
         qr_code_db.save()
@@ -183,10 +180,8 @@ def handle_scanned_request(request):
         phone.sickness_date = utc.localize(datetime.now())
         phone.save()
     else :
-        print("estab")
         qr_code_db = Qrcode_Establishment.objects.get(pk = qr_code)
         if qr_code_db is None:
-            print("is none")
             return JsonResponse({'code': 0, 'error': 'Qr_code does not exist'}, status=200)
         qr_code_db.nb_scans = qr_code_db.nb_scans + 1
         qr_code_db.save()
@@ -210,11 +205,9 @@ def get_qr_list(request):
         return JsonResponse({'response': 'User not logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
     qr_code_db_count = Qrcode_Establishment.objects.filter(establishment=user_id).count()
-    print(qr_code_db_count)
     qr_codes_list = []
     
     for qr_code_db_img in Qrcode_Establishment.objects.filter(establishment=user_id).all():
-        #print(qr_code_db_img.qrcode_id)
         qr = pyqrcode.create(str(qr_code_db_img.qrcode_id))
         qr.png("testQR.png",scale=5)
         data = decode(Image.open("testQR.png"))
@@ -249,7 +242,6 @@ def get_device_id(request):
 def handle_app_launched(request):
     request_data = JSONParser().parse(request)
     req_phone_id = request_data['id']
-    print("THIS PHONE : " + str(req_phone_id))
     if(req_phone_id is not None): 
         try:
             expositions_count = 0
@@ -277,7 +269,6 @@ def handle_app_launched(request):
             phone_serializer.save()
         except Exception as e:
             return JsonResponse({'code': 0, 'error': 'Phone couldnt be added in DB'}, status=200)
-        print("NEW PHONE : " + str(newPhoneId))
         return JsonResponse({'code': 1, 'id': newPhoneId}, status=200)
     return JsonResponse({'code': 0, 'error': 'API error'}, status=200)
 

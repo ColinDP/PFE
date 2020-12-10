@@ -19,12 +19,11 @@ const CreateQRCodeContainer = ({ setQRList, QRList, handleList }) => {
 
     Service.askForQR(data)
       .then((resp) => {
-        console.log(resp.data);
         var array = [];
-        for (var i = 0; i < resp.data.images.length; i++) {
-          const image = resp.data.images[i];
+        for (var i = 0; i < resp.data.data.length; i++) {
+          const image = resp.data.data[i].image;
           const count = 0;
-          const name = resp.data.names[i];
+          const name = resp.data.data[i].name;
           array.push({
             image:
               "data:image/png;base64," + image.substring(2, image.length - 1),
@@ -44,7 +43,7 @@ const CreateQRCodeContainer = ({ setQRList, QRList, handleList }) => {
         setCharging(false);
         setShowDownloadLink(false);
         setReceived(true);
-        setError(error.response.data.response);
+        //setError(error.response.data.response);
       });
   };
   return (

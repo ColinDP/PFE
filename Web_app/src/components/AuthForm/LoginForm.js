@@ -32,12 +32,11 @@ const LoginForm = () => {
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(data, actions) => {
-          console.log(data);
+
           setError("");
           // CALL API TO LOGIN USER
           AuthService.authenticateUser(data)
             .then((resp) => {
-              console.log(resp);
               if (resp.token) {
                 const user = {
                   token: resp.token,
