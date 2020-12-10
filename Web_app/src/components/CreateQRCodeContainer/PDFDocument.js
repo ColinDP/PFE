@@ -11,11 +11,11 @@ import {
 const PDFDocument = ({ data }) => {
   return (
     <Document>
-      {data.map((image, index) => (
+      {data.map((item, index) => (
         <Page key={index} style={styles.page} size="A4">
           <View style={styles.section}>
             <Text>Scan me to save lives!!</Text>
-            <Image style={styles.image} source={image} />
+            <Image style={styles.image} source={item.image} />
             <Text style={styles.footer}>{`${index + 1} / ${data.length}`}</Text>
           </View>
         </Page>

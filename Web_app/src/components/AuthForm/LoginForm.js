@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Image, Text } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import AuthService from "services/authService";
@@ -20,6 +20,7 @@ const loginSchema = yup.object({
 const LoginForm = () => {
   const userLoggedIn = AuthService.getCurrentUser();
   const history = useHistory();
+  const [error, setError] = useState("");
 
   const handleRedirectToRegister = () => {
     history.push("/register");
@@ -32,18 +33,23 @@ const LoginForm = () => {
         initialValues={{ email: "", password: "" }}
         onSubmit={(data, actions) => {
           console.log(data);
+          setError("");
           // CALL API TO LOGIN USER
-          AuthService.authenticateUser(data).then((resp) => {
-            console.log(resp);
-            if (resp.token) {
-              const user = {
-                token: resp.token,
-                role: resp.role,
-              };
-              localStorage.setItem("user", JSON.stringify(user));
-            }
-            history.push("/home");
-          });
+          AuthService.authenticateUser(data)
+            .then((resp) => {
+              console.log(resp);
+              if (resp.token) {
+                const user = {
+                  token: resp.token,
+                  role: resp.role,
+                };
+                localStorage.setItem("user", JSON.stringify(user));
+              }
+              history.push("/home");
+            })
+            .catch((error) => {
+              setError(error.response.data.response);
+            });
         }}
         validationSchema={loginSchema}
         validateOnChange={true}
@@ -66,11 +72,12 @@ const LoginForm = () => {
                 label="Password"
                 secureTextEntry={true}
               />
+              <Text style={styles.error}>{error}</Text>
               <Card.Actions style={styles.buttons}>
                 <Button mode="flat" onPress={handleRedirectToRegister}>
                   Créer un compte
                 </Button>
-                <Button mode="contained" onPress={handleSubmit}>
+                <Button mode="flat" onPress={handleSubmit}>
                   Se connecter
                 </Button>
               </Card.Actions>
@@ -105,6 +112,10 @@ const styles = StyleSheet.create({
   },
   buttons: {
     justifyContent: "space-between",
+  },
+  error: {
+    textAlign: "center",
+    color: "red",
   },
 });
 

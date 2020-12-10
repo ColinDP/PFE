@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
@@ -40,6 +40,7 @@ const EstablishmentSchema = yup.object({
 
 const EstablishmentForm = ({ setAccount }) => {
   const history = useHistory();
+  const [error, setError] = useState("");
   return (
     <Formik
       initialValues={{
@@ -53,10 +54,15 @@ const EstablishmentForm = ({ setAccount }) => {
         address_postcode: "",
       }}
       onSubmit={(data, actions) => {
+        setError("");
         console.log(data);
-        AuthService.createEstablishment(data).then((resp) => {
-          history.push("/login");
-        });
+        AuthService.createEstablishment(data)
+          .then((resp) => {
+            history.push("/login");
+          })
+          .catch((error) => {
+            setError(error.response.data.response);
+          });
       }}
       validationSchema={EstablishmentSchema}
       validateOnChange={true}
@@ -106,6 +112,7 @@ const EstablishmentForm = ({ setAccount }) => {
               label="Password"
               secureTextEntry={true}
             />
+            <Text style={styles.error}>{error}</Text>
             <Card.Actions style={styles.buttons}>
               <IconButton
                 color="#808080"
@@ -154,6 +161,10 @@ const styles = StyleSheet.create({
   },
   buttons: {
     justifyContent: "space-between",
+  },
+  error: {
+    textAlign: "center",
+    color: "red",
   },
 });
 

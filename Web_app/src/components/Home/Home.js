@@ -1,33 +1,42 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { Card, Title, ActivityIndicator } from "react-native-paper";
 import LogoutButton from "./LogoutButton";
 import CreateQRCodeContainer from "components/CreateQRCodeContainer/CreateQRCodeContainer";
 import ListQRCodes from "components/ListQRCodes/ListQRCodes";
 import Service from "services/Service";
 
 const Home = () => {
-  const [datas, setDatas] = useState([]);
-  const [display, setDisplay] = useState(false);
-  const [count, setCount] = useState(0);
+  const [QRList, setQRList] = useState([]);
+  const [showQRList, setShowQRList] = useState(false);
+  const [charging, setCharging] = useState(false);
 
   const isEntreprise = JSON.parse(localStorage.getItem("user")).role == "E";
 
+  useEffect(() => {
+    handleList();
+  }, []);
+
   const handleList = () => {
-    setDisplay(true);
-    setCount(count + 1);
+    setShowQRList(false);
+    setCharging(true);
     Service.listQR()
       .then((resp) => {
         var array = [];
         for (var i = 0; i < resp.data.data.length; i++) {
-          const images = resp.data.data[i].images;
+          const images = resp.data.data[i].image;
           const count = resp.data.data[i].count;
+          const name = resp.data.data[i].name;
           array.push({
             image:
               "data:image/png;base64," + images.substring(2, images.length - 1),
             count: count,
+            name: name,
           });
         }
-        setDatas(array);
+        setQRList(array);
+        setShowQRList(true);
+        setCharging(false);
       })
       .catch((error) => {
         console.log(error);
@@ -36,32 +45,62 @@ const Home = () => {
 
   return (
     <>
-      <Image
-        source={require("assets/blockcovid-logo.png")}
-        style={styles.logo}
-      />
       <LogoutButton />
-      <CreateQRCodeContainer />
-      {!display ? (
-        handleList()
-      ) : isEntreprise ? (
-        <ListQRCodes data={datas} />
-      ) : (
-        console.log("ok")
-      )}
+      <View style={styles.row}>
+        <View style={styles.col}>
+          <CreateQRCodeContainer
+            setQRList={setQRList}
+            QRList={QRList}
+            handleList={handleList}
+          />
+        </View>
+        {isEntreprise && (
+          <View style={styles.col}>
+            <Card style={styles.cardContainer}>
+              <Title style={styles.title}> Liste de vos QR Codes </Title>
+              <Card.Content style={styles.cardContent}>
+                {showQRList ? (
+                  <ListQRCodes data={QRList} />
+                ) : (
+                  <ActivityIndicator animating={charging} size="large" />
+                )}
+              </Card.Content>
+            </Card>
+          </View>
+        )}
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  logo: {
-    position: "fixed",
-    top: "40px",
-    left: "50px",
-    zIndex: 2,
-    padding: "5px",
-    width: 250,
-    height: 50,
+  title: {
+    textAlign: "center",
+  },
+  cardContent: {
+    padding: "50px",
+  },
+  cardContainer: {
+    width: "450px",
+    height: "300px",
+    paddingTop: "20px",
+    paddingBottom: "20px",
+    borderColor: "#D3D3D3",
+    borderWidth: "1px",
+    borderRadius: "10px",
+    boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1)",
+    transition: "0.1s ease",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    width: "100%",
+  },
+  col: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
   },
 });
 

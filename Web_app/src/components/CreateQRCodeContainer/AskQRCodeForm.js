@@ -11,6 +11,8 @@ const QRCodeSchema = yup.object({
 });
 
 const AskQRCodeForm = ({ handleFormSubmit }) => {
+  const isEntreprise = JSON.parse(localStorage.getItem("user")).role == "E";
+
   return (
     <Formik
       initialValues={{ quantity: 1, names: "" }}
@@ -31,12 +33,14 @@ const AskQRCodeForm = ({ handleFormSubmit }) => {
             min="1"
             max="30"
           />
-          <Field
-            component={CustomInput}
-            label="Ajouter un nom à vos QR Codes"
-            name="names"
-            placeholder="ex: QRCode1, QRCode2, .."
-          />
+          {isEntreprise && (
+            <Field
+              component={CustomInput}
+              label="Ajouter un nom à vos QR Codes"
+              name="names"
+              placeholder="ex: QRCode1, QRCode2, .."
+            />
+          )}
           <Card.Actions style={styles.button}>
             <Button mode="contained" onPress={handleSubmit}>
               Ask QR Code Now

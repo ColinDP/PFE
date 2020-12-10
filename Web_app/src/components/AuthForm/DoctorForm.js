@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
@@ -37,6 +37,7 @@ const DoctorSchema = yup.object({
 
 const DoctorForm = ({ setAccount }) => {
   const history = useHistory();
+  const [error, setError] = useState("");
   return (
     <Formik
       initialValues={{
@@ -51,10 +52,15 @@ const DoctorForm = ({ setAccount }) => {
         address_postcode: "",
       }}
       onSubmit={(data, actions) => {
+        setError("");
         console.log(data);
-        AuthService.createDoctor(data).then((resp) => {
-          history.push("/login");
-        });
+        AuthService.createDoctor(data)
+          .then((resp) => {
+            history.push("/login");
+          })
+          .catch((error) => {
+            setError(error.response.data.error);
+          });
       }}
       validationSchema={DoctorSchema}
       validateOnChange={true}
@@ -102,6 +108,7 @@ const DoctorForm = ({ setAccount }) => {
               label="Password"
               secureTextEntry={true}
             />
+            <Text style={styles.error}>{error}</Text>
             <Card.Actions style={styles.buttons}>
               <IconButton
                 color="#808080"
@@ -150,6 +157,10 @@ const styles = StyleSheet.create({
   },
   buttons: {
     justifyContent: "space-between",
+  },
+  error: {
+    textAlign: "center",
+    color: "red",
   },
 });
 
