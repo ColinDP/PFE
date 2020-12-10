@@ -1,0 +1,3 @@
+il faut runserver uneip:8080
+pour que mobapp et webapp tournent en mm temps sur le mm serveur
+mobapp marche pas avec localhost

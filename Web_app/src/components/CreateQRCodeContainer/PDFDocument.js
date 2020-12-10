@@ -14,8 +14,9 @@ const PDFDocument = ({ data }) => {
       {data.map((item, index) => (
         <Page key={index} style={styles.page} size="A4">
           <View style={styles.section}>
-            <Text>Scan me to save lives!!</Text>
+            <Text style={styles.text}>Scan me to save lives!!</Text>
             <Image style={styles.image} source={item.image} />
+            <Text>{item.name}</Text>
             <Text style={styles.footer}>{`${index + 1} / ${data.length}`}</Text>
           </View>
         </Page>
@@ -32,8 +33,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
   },
+  text: {
+    paddingTop: "250px",
+  },
   image: {
-    marginTop: "250px",
     display: "block",
     marginLeft: "auto",
     marginRight: "auto",

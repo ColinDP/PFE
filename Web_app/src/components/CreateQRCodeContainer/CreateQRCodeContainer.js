@@ -41,7 +41,6 @@ const CreateQRCodeContainer = ({ setQRList, QRList, handleList }) => {
         setError("");
       })
       .catch((error) => {
-        console.log(error);
         setCharging(false);
         setShowDownloadLink(false);
         setReceived(true);
@@ -83,6 +82,9 @@ const styles = StyleSheet.create({
     borderRadius: "10px",
     boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1)",
     transition: "0.1s ease",
+  },
+  text: {
+    color: "red",
   },
   downloadButton: {},
   text: {

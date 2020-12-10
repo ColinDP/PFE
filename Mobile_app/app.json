@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mobile_app",
-    "slug": "Mobile_app",
+    "name": "BlockCovid",
+    "slug": "blockcovid",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.stampia.blockcovid"
     },
     "web": {
       "favicon": "./assets/favicon.png"

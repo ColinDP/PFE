@@ -8,7 +8,7 @@ const Authenticate = () => {
 
   useEffect(() => {
 
-      SecureStore.deleteItemAsync("device_id")
+      // SecureStore.deleteItemAsync("device_id")
       // SecureStore.setItemAsync("device_id", "Simon-fab9a071-66e7-4856-8789-7b2375980c15")
 
       SecureStore.getItemAsync("device_id")
@@ -31,7 +31,7 @@ const Authenticate = () => {
         })
   }, [])
 
-  return resp ? <Infos response={resp} /> : null
+  return resp ? <Infos response={resp} /> : <Infos response={{code : 0}}/>
 }
 
 export default Authenticate
